@@ -4,18 +4,32 @@ const router = express.Router();
 const schedule = require('./schedule');
 
 
-/* GET home page. */
+/* GET home page. Returns departures in English by default */
 router.get('/', (req, res, next) => {
-  schedule.flights()
+  schedule.flights("en")
     .then((result) => {
+      console.log("result er: "+result);
+      // check for empty array => no flights found
+      let empty = false;
+      if (result.data.results === []) {
+        empty = true;
+      }
 
+      let lang = "english";
+
+      res.render('index', {
+        title: 'Flight schedule',
+        schedule: result.data.results,
+        language: lang,
+        empty });
+    })
+    .catch((error) => {
+      res.render('error', { title: 'Something went wrong!', error });
     });
-
-  res.render('index', { title: 'Nú er gaman!' });
 });
 
 /* GET flight schedule */
-router.get('/flight/', (req, res, next) => {
+router.get('/statistics/', (req, res, next) => {
 
 });
 

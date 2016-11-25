@@ -1,6 +1,21 @@
 extends layout
 
 block content
-  h1= title
-  p Welcomes! to #{title}
-  p= JSON.stringify(channels)
+  div.main.container.col-md-7.text-center
+    h1= title
+    if empty
+      h2 Engin flug fundust!
+    else
+      div.row.flex
+        h5.col-md-3 Date
+        h5.col-md-3 Flight number
+        h5.col-md-3 To
+        h5.col-md-3 Planned Departure
+        h5.col-md-3 Status
+      each val in schedule
+        div.schedule-item.flex
+          h4.col-md-3= val.date
+          h4.col-md-3: a(href= "https://www.flightradar24.com/"+val.flightNumber)= val.flightNumber  
+          h4.col-md-3= val.to
+          h4.col-md-3= val.plannedArrival
+          h4.col-md-3= val.realArrival
