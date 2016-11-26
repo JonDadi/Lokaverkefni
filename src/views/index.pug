@@ -1,21 +1,34 @@
 extends layout
 
 block content
-  div.main.container.col-md-7.text-center
+  //- nav
+  //-   div.flex.justify
+  //-     h2 Flights
+  //-     h2 Statistics
+
+  div.main.container
     h1= title
+    //- iframe(src="https://www.flightradar24.com/SAS274" width="600" height="600")
+
     if empty
       h2 Engin flug fundust!
     else
-      div.row.flex
-        h5.col-md-3 Date
-        h5.col-md-3 Flight number
-        h5.col-md-3 To
-        h5.col-md-3 Planned Departure
-        h5.col-md-3 Status
-      each val in schedule
-        div.schedule-item.flex
-          h4.col-md-3= val.date
-          h4.col-md-3: a(href= "https://www.flightradar24.com/"+val.flightNumber)= val.flightNumber  
-          h4.col-md-3= val.to
-          h4.col-md-3= val.plannedArrival
-          h4.col-md-3= val.realArrival
+      div.row
+        div.headers.col-md-6
+          h5.col-md-2 Date
+          h5.col-md-2 Flight number
+          h5.col-md-3 To
+          h5.col-md-3 Planned Departure
+          h5.col-md-2 Status
+        div.col-md-5
+      div.row
+        div.flights.col-md-6
+          each val in schedule
+            a(href= "https://www.flightradar24.com/"+val.flightNumber)
+              div.schedule-item.flex(name=val.flightNumber)
+                h4.col-md-2= val.date
+                h4.col-md-2= val.flightNumber
+                h4.col-md-3= val.to
+                h4.col-md-3= val.plannedArrival
+                h4.col-md-2= val.realArrival
+        div.col-md-6#iframe

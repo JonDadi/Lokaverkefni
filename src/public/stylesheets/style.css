@@ -14,5 +14,9 @@ a {
 
 .flex {
   display: flex;
-  /*justify-content: space-around;*/
+
+}
+
+.justify {
+  justify-content: space-around;
 }
