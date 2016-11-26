@@ -6,3 +6,13 @@ body {
 a {
   color: #00B7FF;
 }
+
+.schedule-item {
+  outline: 1px solid;
+  margin: 0 auto;
+}
+
+.flex {
+  display: flex;
+  /*justify-content: space-around;*/
+}
