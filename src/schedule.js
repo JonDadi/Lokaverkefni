@@ -16,6 +16,7 @@ function flights(lang) {
   let url = `/flight?language=en&type=departures`;
   console.log(url);
   return instance.get(`/flight?language=en&type=departures`);
+}
 /*
 function flights(lang, type) {
   let url = `/flight?language=${lang}&type=${type}`;
