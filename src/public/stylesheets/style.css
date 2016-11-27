@@ -1,22 +1,43 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  padding-top: 70px;
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+a:hover, a:visited, a:link, a:active
+{
+    text-decoration: none;
 }
 
 .schedule-item {
   outline: 1px solid;
   margin: 0 auto;
+  text-decoration: none;
+  color: black;
 }
+
+/*.schedule {
+  position: relative;
+}*/
 
 .flex {
   display: flex;
-
+  top: 1em;
+  right: 1em;
 }
 
 .justify {
   justify-content: space-around;
 }
+
+.iframe {
+  position: fixed;
+  z-index: 1;
+}
+
+/*.row {
+  outline: 1px solid;
+}*/
+
+/*.col-md-3 {
+  outline: 1px solid;
+}*/

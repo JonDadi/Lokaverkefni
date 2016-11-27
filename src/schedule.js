@@ -10,9 +10,9 @@ const instance = axios.create({ baseURL });
  * @param   {lang} // either 'en' or 'is'
  * @returns {Promise}
  */
-function flights(lang) {
-  let url = `/flight?language=${lang}&type=departures`;
-  console.log(url);
+function flights(lang, type) {
+  let url = `/flight?language=${lang}&type=${type}`;
+
   return instance.get(url);
 }
 
