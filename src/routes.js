@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const schedule = require('./schedule');
 const db = require('./dbConnect');
+const flightSaver = require('./flightSaver');
 
 /* GET home page. Returns departures in English by default */
 router.get('/', (req, res, next) => {
@@ -31,21 +32,19 @@ router.get('/', (req, res, next) => {
 /* GET flight schedule */
 router.get('/statistics/', (req, res, next) => {
 
-  //db.createTables();
+  db.createTables();
 
   //Flight data should be
   const flightData = ["test", "test", "test", "test", "test", "test", "test"];
 
-  data = db.getAllArrivals(callBackPrint)
+  //data = db.getAllArrivals()
 
-  //database.insertArrivalFlight(flightData);
+  flightSaver.initFlightSaver();
+
 
   res.render('index', {title: 'insertion successfull'});
 
 });
 
-function callBackPrint(data){
-  console.log(data);
-}
 
 module.exports = router;
