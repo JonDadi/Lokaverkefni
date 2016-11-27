@@ -27,7 +27,7 @@ router.get('/', (req, res, next) => {
 });
 
 // get type of flight, either "arrivals" or "departures"
-router.get('/:type', (req, res, next) => {
+router.get('/flights/:type', (req, res, next) => {
   let type = req.params.type;
 
   schedule.flights("en", type)
@@ -58,14 +58,9 @@ router.get('/:type', (req, res, next) => {
 });
 
 /* GET flight schedule */
-router.get('/statistics/', (req, res, next) => {
+router.get('/statstics/', (req, res, next) => {
 
-  db.createTables();
-
-  //Flight data should be
-  const flightData = ["test", "test", "test", "test", "test", "test", "test"];
-
-  //data = db.getAllArrivals()
+  //db.createTables();
 
   flightSaver.initFlightSaver();
 
