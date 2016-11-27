@@ -27,8 +27,11 @@ router.get('/', (req, res, next) => {
 });
 
 // get type of flight, either "arrivals" or "departures"
-router.get('/flights/:type', (req, res, next) => {
+// if param is 'statistics' we send the request forward
+router.get('/:type', (req, res, next) => {
   let type = req.params.type;
+
+  if(type === "statistics") next();
 
   schedule.flights("en", type)
     .then((result) => {
@@ -58,7 +61,7 @@ router.get('/flights/:type', (req, res, next) => {
 });
 
 /* GET flight schedule */
-router.get('/statstics/', (req, res, next) => {
+router.get('/statistics/', (req, res, next) => {
 
   //db.createTables();
 
