@@ -1,21 +1,53 @@
 extends layout
 
 block content
-  div.main.container.col-md-7.text-center
-    h1= title
+  //- nav
+  //-   div.flex.justify
+  //-     h2 Flights
+  //-     h2 Statistics
+  header
+    nav.navbar.navbar-default.navbar-fixed-top
+      div.container
+        div
+          ul.nav.navbar-nav
+            li.active
+              a(href= "/") Flights
+            li
+              a(href= "/statistics") Statistics
+  div.main.container
+    div.row
+      div.col-md-3.text-center
+        a(href= "arrivals")
+          button.btn.btn-primary Arrivals
+      div.col-md-3.text-center
+        a(href= "departures")
+          button.btn.btn-primary Departures
     if empty
       h2 Engin flug fundust!
     else
-      div.row.flex
-        h5.col-md-3 Date
-        h5.col-md-3 Flight number
-        h5.col-md-3 To
-        h5.col-md-3 Planned Departure
-        h5.col-md-3 Status
-      each val in schedule
-        div.schedule-item.flex
-          h4.col-md-3= val.date
-          h4.col-md-3: a(href= "https://www.flightradar24.com/"+val.flightNumber)= val.flightNumber  
-          h4.col-md-3= val.to
-          h4.col-md-3= val.plannedArrival
-          h4.col-md-3= val.realArrival
+      div.row
+        div.col-md-6.schedule
+          div.row.text-center
+            h1= title
+          div.row
+            h5.col-md-3 Date
+            h5.col-md-2 Flight number
+            if type == "arrivals"
+              h5.col-md-3 From
+              h5.col-md-2 Planned arrival
+            else
+              h5.col-md-3 To
+              h5.col-md-2 Planned Departure
+            h5.col-md-2 Status
+          each val in schedule
+            div.row
+              h4.col-md-3= val.date
+              h4.col-md-2= val.flightNumber
+              if type == "arrivals"
+                h4.col-md-3= val.from
+              else
+                h4.col-md-3= val.to
+              h4.col-md-2= val.plannedArrival
+              h4.col-md-2= val.realArrival
+        div.col-md-6#iframe
+          iframe(src="https://www.flightradar24.com/simple?lat=63.80&lon=-21.00&z=7&airports=1&airport_filter=KEF:inout" width="600" height="450").iframe
