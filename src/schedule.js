@@ -1,6 +1,7 @@
 const axios = require('axios');
 
 const baseURL = (process.env.baseURL || 'https://apis.is');
+
 const instance = axios.create({ baseURL });
 
 /**
@@ -12,7 +13,7 @@ const instance = axios.create({ baseURL });
 function flights(lang) {
   let url = `/flight?language=${lang}&type=departures`;
   console.log(url);
-  return instance.get(`/flight?language=${lang}&type=departures`);
+  return instance.get(url);
 }
 
 
