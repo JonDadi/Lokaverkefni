@@ -62,7 +62,7 @@ router.get('/f/:type', (req, res, next) => {
 
 /* GET flight schedule */
 router.get('/statistics/', (req, res, next) => {
-  // db.createTables();
+  db.createTables();
   flightSaver.initFlightSaver();
   res.render('stats', { title: 'Flight Statistics' });
 });

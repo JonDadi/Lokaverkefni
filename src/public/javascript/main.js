@@ -4,12 +4,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 let Flights = (function() {
 
-
-
   function init() {
     let flights = document.getElementsByClassName('flights');
-
-    console.log(flights);
 
     for (var i = 0; i < flights.length; i++) {
       flights[i].addEventListener('click', createIFrame, false);
