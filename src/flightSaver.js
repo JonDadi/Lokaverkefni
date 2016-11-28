@@ -12,6 +12,7 @@ let recentlySavedFlights = [];
 function initFlightSaver() {
   flights.flights('en', 'departures')
   .then((data) => {
+
     saveFlights(data.data.results);
   })
   .catch((error) => {
@@ -33,16 +34,16 @@ function compareToCurrentArray(data){
 
 function saveFlights(flights) {
   // Don't save if the data hasn't changed.
-  if (arraysEqual(flights, recentlySavedFlights)) { return; }
+  console.log(flightArraysEqual(flights, recentlySavedFlights));
+  if (flightArraysEqual(flights, recentlySavedFlights)) {  return; }
+  recentlySavedFlights = [];
   for (let i = 0; i < flights.length; i++) {
     // Calculate the delay
     flights[i].delay = getDelay(flights[i]);
-    // Empty the recently saved flights.
-    recentlySavedFlights = [];
     db.insertDepartureFlight(flights[i]);
     // Add it to our recently saved flight list, so we don't
     // insert it again later.
-    recentlySavedFlights.push(flights[i].flightNumber);
+    recentlySavedFlights.push(flights[i]);
     // console.log(flights[i].flightNumber);
   }
 }
@@ -70,21 +71,38 @@ function getUnsavedDepartedFlights(flights){
 function getDelay(flight) {
   const plannedTime = flight.plannedArrival;
   const realTime = flight.realArrival.replace('Departed ', '');
-
   const timeDiff = Math.abs(new Date('2011/10/09 ' + realTime)
     - new Date('2011/10/09 ' + plannedTime));
   const minutes = Math.floor((timeDiff / 1000) / 60);
+  constructDate(flight.date, plannedTime);
   if (isNaN(minutes)) return 0;
   return minutes;
 }
 
-function arraysEqual(arr1, arr2) {
+// Takes two strings in the form day.month (8. Nov)
+// and hour:minutes (12:31).
+// returns a legal Js Date object
+function constructDate(flightDate, time){
+  let returnDate;
+  const currDate = new Date();
+  const currentYear = currDate.getFullYear();
+  const month = flightDate.substring(flightDate.length-3, flightDate.length);
+  const day = flightDate.substring(0, 2);
+  const dateString = currentYear+'/'+month+'/'+day+' '+time;
+  //console.log(returnDate);
+  //console.log(month);
+  //console.log(day);
+  //console.log("dStr",dateString);
+  returnDate = new Date(dateString);
+}
+
+
+function flightArraysEqual(arr1, arr2) {
   if (arr1.length !== arr2.length) {
     return false;
   }
-
   for (let i = arr1.length; i--;) {
-    if (arr1[i] !== arr2[i]) {
+    if (arr1[i].flightNumber !== arr2[i].flightNumber) {
       return false;
     }
   }

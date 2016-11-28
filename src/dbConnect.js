@@ -1,13 +1,13 @@
 const pgp = require('pg-promise')();
 
-const db = pgp('postgres://postgres:gusti@localhost:5432/FlightData');
+const db = pgp('postgres://postgres:dadi@localhost:5432/FlightData');
 
 // Create the tables!
 function createTables() {
   // Arrival table created.
   db.none('CREATE TABLE IF NOT EXISTS arrivals( \
             id             SERIAL PRIMARY KEY,  \
-            flightDate     varchar(20),         \
+            flightDate     timestamptz,         \
             flightNumber   varchar(20),         \
             airline        varchar(64),         \
             fromDest       varchar(64),         \
@@ -26,7 +26,7 @@ function createTables() {
   // Departure table created.
   db.none('CREATE TABLE IF NOT EXISTS departures( \
             id               SERIAL PRIMARY KEY,  \
-            flightDate       varchar(20),         \
+            flightDate       timestamptz,         \
             flightNumber     varchar(20),         \
             airline          varchar(64),         \
             toDest           varchar(64),         \
