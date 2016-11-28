@@ -11,3 +11,8 @@ block content
             li.active
               a(href= "/statistics") Statistics
   h1 Flight Statistics
+  div.graphWrapper
+    canvas#myChart()
+  script(type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js')
+  script(type='text/javascript' src='javascript/libs/Chart.js')
+  script(type='text/javascript' src='javascript/charts.js')

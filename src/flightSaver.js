@@ -9,8 +9,7 @@ let timerOn = false;
 let recentlySavedFlights = [];
 
 function initFlightSaver(){
-
-  flights.flights()
+  flights.flights("en", "departures")
   .then( (data) => {
       saveFlights(data.data.results);
   })
@@ -18,16 +17,7 @@ function initFlightSaver(){
     console.log(error);
   });
 
-
-    dummyFlight = {"date":"27. Nov","flightNumber":"WW760","airline":"WOW air",
-                  "to":"Frankfurt",
-                  "plannedArrival":"06:20",
-                  "realArrival":"Departed 12:59",
-                  "status":null}
-    //setTimer();
-
   }
-
 /*
 function compareToCurrentArray(data){
    // Check if the flights provided by the api are equal to
@@ -82,9 +72,11 @@ function getDelay(flight){
   const plannedTime = flight.plannedArrival;
   const realTime = flight.realArrival.replace("Departed ", "");
 
-  const timeDiff = Math.abs(new Date('2011/10/09 '+realTime) - new Date('2011/10/09 '+plannedTime));
 
-  return Math.floor((timeDiff/1000)/60);
+  const timeDiff = Math.abs(new Date('2011/10/09 '+realTime) - new Date('2011/10/09 '+plannedTime));
+  const minutes = Math.floor((timeDiff/1000)/60)
+  if(isNaN(minutes)) return 0;
+  return minutes ;
 }
 
 

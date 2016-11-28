@@ -28,7 +28,7 @@ router.get('/', (req, res, next) => {
 
 // get type of flight, either "arrivals" or "departures"
 // if param is 'statistics' we send the request forward
-router.get('/:type', (req, res, next) => {
+router.get('/f/:type', (req, res, next) => {
   let type = req.params.type;
 
   if(type === "statistics") next();
@@ -66,11 +66,15 @@ router.get('/statistics/', (req, res, next) => {
   //db.createTables();
 
   flightSaver.initFlightSaver();
-
-
   res.render('stats', {title: 'Flight Statistics'});
 
 });
 
-
+/* GET flight schedule */
+router.get('/json/', (req, res, next) => {
+  db.getAvgDelayAllAirlines()
+  .then( (data) => {
+    res.json(data);
+  })
+});
 module.exports = router;

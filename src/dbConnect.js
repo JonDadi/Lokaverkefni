@@ -13,7 +13,7 @@ function createTables(){
             plannedArrival varchar(20),         \
             realArrival    varchar(20),         \
             flightStatus   varchar(20),         \
-            delay          varChar(5)           \
+            delay          int                  \
   )")
   .then( () => {
     console.log("Arrival table created!");
@@ -32,7 +32,7 @@ function createTables(){
             plannedDeparture varchar(20),         \
             realDeparture    varchar(20),         \
             flightStatus     varchar(20),         \
-            delay            varChar(5)           \
+            delay            int                  \
   )")
   .then( () => {
     console.log("Departure table created!");
@@ -49,7 +49,7 @@ function insertArrivalFlight(flightData){
                                 flightStatus, delay)                        \
                       VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
                       [flightData.date, flightData.flightNumber,
-                       flightData.airline, flightData.from,
+                       flightData.from, flightData.airline,
                        flightData.plannedArrival, flightData.realArrival,
                        flightData.status, flightData.delay])
   .then( () => {
@@ -67,7 +67,7 @@ function insertDepartureFlight(flightData){
                                   flightStatus, delay)                          \
                       VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
                       [flightData.date, flightData.flightNumber,
-                       flightData.airline, flightData.to,
+                       flightData.to, flightData.airline,
                        flightData.plannedArrival, flightData.realArrival,
                        flightData.status, flightData.delay])
   .then( () => {
@@ -90,10 +90,23 @@ function getAllArrivals(callBack){
   return db.any('SELECT * FROM arrivals', [true]);
 }
 
+function getAvgDelayAllAirlines(){
+  return db.any('SELECT airline, ROUND(AVG(delay)) AS avgDelay FROM departures \
+                 GROUP BY airline', [true]);
+}
+
+function getAllAirlines(){
+  return db.any('SELECT airline, FROM departures \
+                 GROUP BY airline', [true]);
+}
+
+
+
 module.exports = {
     createTables,
     insertArrivalFlight,
     insertDepartureFlight,
     getAllArrivals,
     getAllDepartures,
+    getAvgDelayAllAirlines,
   };
