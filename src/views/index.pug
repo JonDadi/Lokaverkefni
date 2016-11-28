@@ -11,17 +11,17 @@ block content
         div
           ul.nav.navbar-nav
             li.active
-              a(href= "/") Flights
+              a(href= "/").text-uppercase Flights
             li
-              a(href= "/statistics") Statistics
+              a(href= "/statistics").text-uppercase Statistics
   div.main.container
     div.row
       div.col-md-3.text-center
         a(href= "/f/arrivals")
-          button.btn.btn-primary Arrivals
+          button.btn.btn-primary.text-uppercase Arrivals
       div.col-md-3.text-center
         a(href= "/f/departures")
-          button.btn.btn-primary Departures
+          button.btn.btn-primary.text-uppercase Departures
     if empty
       h2 Engin flug fundust!
     else
@@ -30,15 +30,22 @@ block content
           div.row.text-center
             h1= title
           div.row
-            h5.col-md-3 Date
-            h5.col-md-2 Flight number
+            h5.col-md-3
+              b Date
+            h5.col-md-2
+              b Flight number
             if type == "arrivals"
-              h5.col-md-3 From
-              h5.col-md-2 Planned arrival
+              h5.col-md-3
+                b From
+              h5.col-md-2
+                b Planned arrival
             else
-              h5.col-md-3 To
-              h5.col-md-2 Planned Departure
-            h5.col-md-2 Status
+              h5.col-md-3
+                b To
+              h5.col-md-2
+                b Planned Departure
+            h5.col-md-2
+              b Status
           each val in schedule
             div.row
               h4.col-md-3= val.date
@@ -49,5 +56,6 @@ block content
                 h4.col-md-3= val.to
               h4.col-md-2= val.plannedArrival
               h4.col-md-2= val.realArrival
-        div.col-md-6#iframe
-          iframe(src="https://www.flightradar24.com/simple?lat=63.80&lon=-21.00&z=7&airports=1&airport_filter=KEF:inout" width="600" height="450").iframe
+        div.col-md-6.iframe#iframe
+          h4.text-center Only shows in/outbound flights from Keflavík
+          iframe(src="https://www.flightradar24.com/simple?lat=63.80&lon=-21.00&z=7&airports=1&airport_filter=KEF:inout" width="600" height="450")

@@ -1,7 +1,6 @@
 const axios = require('axios');
 
 const baseURL = (process.env.baseURL || 'https://apis.is');
-
 const instance = axios.create({ baseURL });
 
 /**
@@ -10,14 +9,10 @@ const instance = axios.create({ baseURL });
  * @param   {lang} // either 'en' or 'is'
  * @returns {Promise}
  */
-
 function flights(lang, type) {
-  let url = `/flight?language=${lang}&type=${type}`;
-
+  const url = `/flight?language=${lang}&type=${type}`;
   return instance.get(url);
-
 }
-
 
 module.exports = {
   flights,

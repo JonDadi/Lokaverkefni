@@ -1,4 +1,5 @@
 const flights = require('./schedule');
+
 const db = require('./dbConnect');
 const schedule = require('node-schedule');
 // Array that stores the flights that come from the Api.
@@ -8,16 +9,15 @@ let timerOn = false;
 // Keeping track of recently saved flights to avoid saving duplicates.
 let recentlySavedFlights = [];
 
-function initFlightSaver(){
-  flights.flights("en", "departures")
-  .then( (data) => {
-      saveFlights(data.data.results);
+function initFlightSaver() {
+  flights.flights('en', 'departures')
+  .then((data) => {
+    saveFlights(data.data.results);
   })
-  .catch( (error) => {
+  .catch((error) => {
     console.log(error);
   });
-
-  }
+}
 /*
 function compareToCurrentArray(data){
    // Check if the flights provided by the api are equal to
@@ -31,20 +31,19 @@ function compareToCurrentArray(data){
 }
 */
 
-function saveFlights(flights){
+function saveFlights(flights) {
   // Don't save if the data hasn't changed.
-  if(arraysEqual(flights, recentlySavedFlights)){ return; }
-  for(let i = 0; i<flights.length; i++){
-
+  if (arraysEqual(flights, recentlySavedFlights)) { return; }
+  for (let i = 0; i < flights.length; i++) {
     // Calculate the delay
     flights[i].delay = getDelay(flights[i]);
-    //Empty the recently saved flights.
+    // Empty the recently saved flights.
     recentlySavedFlights = [];
     db.insertDepartureFlight(flights[i]);
     // Add it to our recently saved flight list, so we don't
     // insert it again later.
     recentlySavedFlights.push(flights[i].flightNumber);
-    //console.log(flights[i].flightNumber);
+    // console.log(flights[i].flightNumber);
   }
 }
 
@@ -57,8 +56,8 @@ function getUnsavedDepartedFlights(flights){
     //console.log(recentlySavedFlights.indexOf(flights[i].flightNumber));
     //Check if the flight is departed and is not in recently saved flights.
     console.log(!(recentlySavedFlights.indexOf(flights[i].flightNumber) > -1));
-    console.log(flights[i].realArrival.includes("Departed"));
-    if(flights[i].realArrival.includes("Departed") &&
+    console.log(flights[i].realArrival.includes('Departed'));
+    if(flights[i].realArrival.includes('Departed') &&
        !(recentlySavedFlights.indexOf(flights[i].flightNumber) > -1)){
         unsavedFlights.push(flights[i]);
 
@@ -68,43 +67,45 @@ function getUnsavedDepartedFlights(flights){
 }
 */
 
-function getDelay(flight){
+function getDelay(flight) {
   const plannedTime = flight.plannedArrival;
-  const realTime = flight.realArrival.replace("Departed ", "");
+  const realTime = flight.realArrival.replace('Departed ', '');
 
-
-  const timeDiff = Math.abs(new Date('2011/10/09 '+realTime) - new Date('2011/10/09 '+plannedTime));
-  const minutes = Math.floor((timeDiff/1000)/60)
-  if(isNaN(minutes)) return 0;
-  return minutes ;
+  const timeDiff = Math.abs(new Date('2011/10/09 ' + realTime)
+    - new Date('2011/10/09 ' + plannedTime));
+  const minutes = Math.floor((timeDiff / 1000) / 60);
+  if (isNaN(minutes)) return 0;
+  return minutes;
 }
-
 
 function arraysEqual(arr1, arr2) {
-    if(arr1.length !== arr2.length)
-        return false;
-    for(var i = arr1.length; i--;) {
-        if(arr1[i] !== arr2[i])
-            return false;
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+
+  for (let i = arr1.length; i--;) {
+    if (arr1[i] !== arr2[i]) {
+      return false;
     }
-    return true;
+  }
+  return true;
 }
 
-function setTimer(){
-  var rule = new schedule.RecurrenceRule();
+function setTimer() {
+  const rule = new schedule.RecurrenceRule();
   rule.dayOfWeek = [new schedule.Range(0, 6)];
   rule.hour = 23;
   rule.minute = 50;
 
-  var j = schedule.scheduleJob(rule, function(){
+  let j = schedule.scheduleJob(rule, function(){
     flights.flights()
-    .then( (data) => {
-        saveFlights(data.data.results);
+    .then((data) => {
+      saveFlights(data.data.results);
     })
-    .catch( (error) => {
+    .catch((error) => {
       console.log(error);
     });
   });
-  }
+}
 
-module.exports = {initFlightSaver,};
+module.exports = { initFlightSaver };

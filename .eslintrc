@@ -6,7 +6,8 @@
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
     "max-len": ["error", 80],
     "no-unused-vars": ["error", { "args": "none" }],
-    "new-cap": ["error", { "capIsNew": false }]
+    "new-cap": ["error", { "capIsNew": false }],
+    "linebreak-style": ["error", "windows"]
   },
   "env": {
     "browser": true,

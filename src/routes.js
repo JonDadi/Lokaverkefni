@@ -7,7 +7,7 @@ const flightSaver = require('./flightSaver');
 
 /* GET home page. Returns arrivals in English by default */
 router.get('/', (req, res, next) => {
-  schedule.flights("en", "arrivals")
+  schedule.flights('en', 'arrivals')
     .then((result) => {
       // check for empty array => no flights found
       let empty = false;
@@ -18,7 +18,7 @@ router.get('/', (req, res, next) => {
       res.render('index', {
         title: 'Arrivals',
         schedule: result.data.results,
-        type: "arrivals",
+        type: 'arrivals',
         empty });
     })
     .catch((error) => {
@@ -26,14 +26,14 @@ router.get('/', (req, res, next) => {
     });
 });
 
-// get type of flight, either "arrivals" or "departures"
+// get type of flight, either 'arrivals' or 'departures'
 // if param is 'statistics' we send the request forward
 router.get('/f/:type', (req, res, next) => {
-  let type = req.params.type;
+  const type = req.params.type;
 
-  if(type === "statistics") next();
+  if (type === 'statistics') next();
 
-  schedule.flights("en", type)
+  schedule.flights('en', type)
     .then((result) => {
       // check for empty array => no flights found
       let empty = false;
@@ -41,18 +41,18 @@ router.get('/f/:type', (req, res, next) => {
         empty = true;
       }
 
-      let title = "";
+      let title = '';
 
       if (type === 'arrivals') {
-        title = "Arrivals";
+        title = 'Arrivals';
       } else {
-        title = "Departures";
+        title = 'Departures';
       }
 
       res.render('index', {
-        title: title,
+        title,
         schedule: result.data.results,
-        type: type,
+        type,
         empty });
     })
     .catch((error) => {
@@ -62,19 +62,16 @@ router.get('/f/:type', (req, res, next) => {
 
 /* GET flight schedule */
 router.get('/statistics/', (req, res, next) => {
-
-  //db.createTables();
-
+  // db.createTables();
   flightSaver.initFlightSaver();
-  res.render('stats', {title: 'Flight Statistics'});
-
+  res.render('stats', { title: 'Flight Statistics' });
 });
 
 /* GET flight schedule */
 router.get('/json/', (req, res, next) => {
   db.getAvgDelayAllAirlines()
-  .then( (data) => {
+  .then((data) => {
     res.json(data);
-  })
+  });
 });
 module.exports = router;

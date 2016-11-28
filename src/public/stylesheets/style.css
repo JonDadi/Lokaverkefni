@@ -1,6 +1,7 @@
 body {
   padding-top: 70px;
-  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 16px "Lato", Helvetica, Arial, sans-serif;
+  /*font-family: 'Lato', sans-serif;*/
 }
 
 a:hover, a:visited, a:link, a:active
@@ -31,6 +32,7 @@ a:hover, a:visited, a:link, a:active
 
 .iframe {
   position: fixed;
+  right: 0px;
   z-index: 1;
 }
 
