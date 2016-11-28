@@ -1,20 +1,21 @@
 const pgp = require('pg-promise')();
 
-const db = pgp('postgres://postgres:dadi@localhost:5432/FlightData');
+const db = pgp('postgres://postgres:gusti@localhost:5432/FlightData');
 
 // Create the tables!
 function createTables() {
   // Arrival table created.
   db.none('CREATE TABLE IF NOT EXISTS arrivals( \
             id             SERIAL PRIMARY KEY,  \
-            flightDate     timestamptz,         \
+            flightDate     varchar(20),         \
             flightNumber   varchar(20),         \
             airline        varchar(64),         \
             fromDest       varchar(64),         \
             plannedArrival varchar(20),         \
             realArrival    varchar(20),         \
             flightStatus   varchar(20),         \
-            delay          int                  \
+            delay          int,                 \
+            onTimeOrEarly  boolean              \
   )')
   .then(() => {
     console.log('Arrival table created!');
@@ -26,14 +27,15 @@ function createTables() {
   // Departure table created.
   db.none('CREATE TABLE IF NOT EXISTS departures( \
             id               SERIAL PRIMARY KEY,  \
-            flightDate       timestamptz,         \
+            flightDate       varchar(20),         \
             flightNumber     varchar(20),         \
             airline          varchar(64),         \
             toDest           varchar(64),         \
             plannedDeparture varchar(20),         \
             realDeparture    varchar(20),         \
             flightStatus     varchar(20),         \
-            delay            int                  \
+            delay            int,                 \
+            onTimeOrEarly    boolean              \
   )')
   .then(() => {
     console.log('Departure table created!');
@@ -47,12 +49,13 @@ function createTables() {
 function insertArrivalFlight(flightData) {
   db.none('INSERT INTO arrivals(flightDate, flightNumber, fromDest, airline,\
                                 plannedArrival, realArrival,                \
-                                flightStatus, delay)                        \
-                      VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
+                                flightStatus, delay, onTimeOrEarly)         \
+                      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)',
                       [flightData.date, flightData.flightNumber,
                        flightData.from, flightData.airline,
                        flightData.plannedArrival, flightData.realArrival,
-                       flightData.status, flightData.delay])
+                       flightData.status, flightData.delay,
+                       flightData.onTime])
   .then(() => {
     console.log('Successfully inserted data into Arrivals table!');
   })
@@ -65,12 +68,13 @@ function insertArrivalFlight(flightData) {
 function insertDepartureFlight(flightData) {
   db.none('INSERT INTO departures(flightDate, flightNumber, toDest, airline,    \
                                   plannedDeparture, realDeparture,              \
-                                  flightStatus, delay)                          \
-                      VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
+                                  flightStatus, delay, onTimeOrEarly)           \
+                      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)',
                       [flightData.date, flightData.flightNumber,
                        flightData.to, flightData.airline,
                        flightData.plannedArrival, flightData.realArrival,
-                       flightData.status, flightData.delay])
+                       flightData.status, flightData.delay,
+                       flightData.onTime])
   .then(() => {
     console.log('Successfully inserted data into Departures table!');
   })
@@ -91,9 +95,14 @@ function getAllArrivals(callBack) {
   return db.any('SELECT * FROM arrivals', [true]);
 }
 
-function getAvgDelayAllAirlines() {
+function getAvgDepartureDelayAllAirlines() {
   return db.any('SELECT airline, ROUND(AVG(delay)) AS avgDelay FROM departures \
-                 GROUP BY airline', [true]);
+                 WHERE onTimeOrEarly = false GROUP BY airline', [true]);
+}
+
+function getAvgArrivalDelayAllAirlines() {
+  return db.any('SELECT airline, ROUND(AVG(delay)) AS avgDelay FROM arrivals \
+                 WHERE onTimeOrEarly = false GROUP BY airline', [true]);
 }
 
 function getAllAirlines() {
@@ -108,5 +117,6 @@ module.exports = {
   insertDepartureFlight,
   getAllArrivals,
   getAllDepartures,
-  getAvgDelayAllAirlines,
+  getAvgDepartureDelayAllAirlines,
+  getAvgArrivalDelayAllAirlines
 };

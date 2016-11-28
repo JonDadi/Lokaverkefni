@@ -12,8 +12,17 @@ let recentlySavedFlights = [];
 function initFlightSaver() {
   flights.flights('en', 'departures')
   .then((data) => {
+    const departure = true;
+    saveFlights(data.data.results, departure);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 
-    saveFlights(data.data.results);
+  flights.flights('en', 'arrivals')
+  .then((data) => {
+    departure = false;
+    saveFlights(data.data.results, departure);
   })
   .catch((error) => {
     console.log(error);
@@ -32,19 +41,21 @@ function compareToCurrentArray(data){
 }
 */
 
-function saveFlights(flights) {
+function saveFlights(flights, departure) {
   // Don't save if the data hasn't changed.
-  //console.log(flightArraysEqual(flights, recentlySavedFlights));
   if (flightArraysEqual(flights, recentlySavedFlights)) {  return; }
   recentlySavedFlights = [];
   for (let i = 0; i < flights.length; i++) {
     // Calculate the delay
-    flights[i].delay = getDelay(flights[i]);
-    db.insertDepartureFlight(flights[i]);
+    flights[i].delay = getDelay(flights[i], departure);
+    if (departure) {
+     db.insertDepartureFlight(flights[i]);
+   } else {
+     db.insertArrivalFlight(flights[i]);
+   }
     // Add it to our recently saved flight list, so we don't
     // insert it again later.
     recentlySavedFlights.push(flights[i]);
-    // console.log(flights[i].flightNumber);
   }
 }
 
@@ -68,15 +79,20 @@ function getUnsavedDepartedFlights(flights){
 }
 */
 
-function getDelay(flight) {
+function getDelay(flight, departure) {
   const plannedTime = flight.plannedArrival;
-  const realTime = flight.realArrival.replace('Departed ', '');
+  let realTime = "";
+  if (departure) {
+    realTime = flight.realArrival.replace('Departed ', '');
+  } else {
+    realTime = flight.realArrival.replace('Landed ', '');
+  }
+
   const realDate = constructDate(flight.date, realTime);
   const plannedDate = constructDate(flight.date, plannedTime);
 
   // We need to check if a flight has delay that spans over midnight
-  // if that happens we need to add a day to pannedDate.
-
+  // if that happens we need to add a day to plannedDate.
 
   let timeDiff = realDate - plannedDate;
   let minutes = Math.floor((timeDiff / 1000) / 60);
@@ -93,12 +109,22 @@ function getDelay(flight) {
     realDate.setDate(realDate.getDate()+1);
     timeDiff = realDate - plannedDate;
     minutes = Math.floor((timeDiff / 1000) / 60);
+    flight.onTime = false;
     return minutes;
   }
-  if (isNaN(minutes) || minutes <= 0) return 0;
+  else if (minutes > -60 && minutes <= 0) {
+    flight.onTime = true;
+  }
+  else {
+    flight.onTime = false;
+  }
+
+  if (isNaN(minutes)) return 0;
 
   return minutes;
 }
+
+
 // Takes two strings in the form day.month (8. Nov)
 // and hour:minutes (12:31).
 // returns a legal Js Date object
@@ -110,12 +136,6 @@ function constructDate(flightDate, time){
   const day = flightDate.substring(0, 2);
   const dateString = currentYear+'/'+month+'/'+day+' '+time;
 
-
-
-  //console.log(returnDate);
-  //console.log(month);
-  //console.log(day);
-  //console.log("dStr",dateString);iiiii
   returnDate = new Date(dateString);
   return returnDate;
 }

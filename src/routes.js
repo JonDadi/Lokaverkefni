@@ -68,10 +68,18 @@ router.get('/statistics/', (req, res, next) => {
 });
 
 /* GET flight schedule */
-router.get('/json/', (req, res, next) => {
-  db.getAvgDelayAllAirlines()
+router.get('/json/avgDepDelay', (req, res, next) => {
+  db.getAvgDepartureDelayAllAirlines()
   .then((data) => {
     res.json(data);
   });
 });
+
+router.get('/json/avgArrDelay', (req, res, next) => {
+  db.getAvgArrivalDelayAllAirlines()
+  .then((data) => {
+    res.json(data);
+  });
+});
+
 module.exports = router;
