@@ -34,7 +34,7 @@ function compareToCurrentArray(data){
 
 function saveFlights(flights) {
   // Don't save if the data hasn't changed.
-  console.log(flightArraysEqual(flights, recentlySavedFlights));
+  //console.log(flightArraysEqual(flights, recentlySavedFlights));
   if (flightArraysEqual(flights, recentlySavedFlights)) {  return; }
   recentlySavedFlights = [];
   for (let i = 0; i < flights.length; i++) {
@@ -71,14 +71,34 @@ function getUnsavedDepartedFlights(flights){
 function getDelay(flight) {
   const plannedTime = flight.plannedArrival;
   const realTime = flight.realArrival.replace('Departed ', '');
-  const timeDiff = Math.abs(new Date('2011/10/09 ' + realTime)
-    - new Date('2011/10/09 ' + plannedTime));
-  const minutes = Math.floor((timeDiff / 1000) / 60);
-  constructDate(flight.date, plannedTime);
-  if (isNaN(minutes)) return 0;
+  const realDate = constructDate(flight.date, realTime);
+  const plannedDate = constructDate(flight.date, plannedTime);
+
+  // We need to check if a flight has delay that spans over midnight
+  // if that happens we need to add a day to pannedDate.
+
+
+  let timeDiff = realDate - plannedDate;
+  let minutes = Math.floor((timeDiff / 1000) / 60);
+
+  // If minutes is negative then that means the plane has departed
+  // earlier than planned.  This is normal up to a certain extent,
+  // because flights might leave a little early.
+  // If minutes is a large negative number then that indicates that the flights
+  // was planned just before midnight but left after midnight.
+  // If we see that a flight is leaving/arriving more than 60 minutes before
+  // planned time then we assume the flight is close to midnight,  and we
+  // add a day to the confirmed landing/departed date.
+  if(minutes < -60){
+    realDate.setDate(realDate.getDate()+1);
+    timeDiff = realDate - plannedDate;
+    minutes = Math.floor((timeDiff / 1000) / 60);
+    return minutes;
+  }
+  if (isNaN(minutes) || minutes <= 0) return 0;
+
   return minutes;
 }
-
 // Takes two strings in the form day.month (8. Nov)
 // and hour:minutes (12:31).
 // returns a legal Js Date object
@@ -89,11 +109,15 @@ function constructDate(flightDate, time){
   const month = flightDate.substring(flightDate.length-3, flightDate.length);
   const day = flightDate.substring(0, 2);
   const dateString = currentYear+'/'+month+'/'+day+' '+time;
+
+
+
   //console.log(returnDate);
   //console.log(month);
   //console.log(day);
-  //console.log("dStr",dateString);
+  //console.log("dStr",dateString);iiiii
   returnDate = new Date(dateString);
+  return returnDate;
 }
 
 
