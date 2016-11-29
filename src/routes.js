@@ -62,12 +62,11 @@ router.get('/f/:type', (req, res, next) => {
 
 /* GET flight schedule */
 router.get('/statistics/', (req, res, next) => {
-  db.createTables();
+   db.createTables();
   flightSaver.initFlightSaver();
   res.render('stats', { title: 'Flight Statistics' });
 });
 
-/* GET flight schedule */
 router.get('/json/avgDepDelay', (req, res, next) => {
   db.getAvgDepartureDelayAllAirlines()
   .then((data) => {
@@ -76,10 +75,53 @@ router.get('/json/avgDepDelay', (req, res, next) => {
 });
 
 router.get('/json/avgArrDelay', (req, res, next) => {
-  db.test()
+  db.getAvgArrivalDelayAllAirlines()
   .then((data) => {
     res.json(data);
   });
 });
+
+router.get('/json/getArrDelayXDaysBack/:days', (req, res, next) => {
+  db.getAvgArrivalDelayPastXDays(parseInt(req.params.days))
+  .then((data) => {
+    res.json(data);
+  });
+});
+
+router.get('/json/getDepartureDelayXDaysBack/:days', (req, res, next) => {
+  db.getAvgDepartureDelayPastXDays(parseInt(req.params.days))
+  .then((data) => {
+    res.json(data);
+  });
+});
+
+router.get('/json/getDepDelayXDaysBackAirline/:airline/:days', (req, res, next) => {
+  db.getAvgArrivalDelayPastXDaysForAirline(parseInt(req.params.days), req.params.airline)
+  .then((data) => {
+    res.json(data);
+  });
+});
+router.get('/json/getArrDelayXDaysBackAirline/:airline/:days', (req, res, next) => {
+  db.getAvgArrivalDelayPastXDaysForAirline(parseInt(req.params.days), req.params.airline)
+  .then((data) => {
+    res.json(data);
+  });
+});
+
+
+//Get the airlines available
+router.get('/json/getArrAirlines/:days', (req, res, next) => {
+  db.getAllArrivalsAirlineNamesPastXDays(parseInt(req.params.days))
+  .then((data) => {
+    res.json(data);
+  });
+});
+router.get('/json/getDepAirlines/:days', (req, res, next) => {
+  db.getAllDeparturesAirlineNamesPastXDays(parseInt(req.params.days))
+  .then((data) => {
+    res.json(data);
+  });
+});
+
 
 module.exports = router;

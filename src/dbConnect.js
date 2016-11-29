@@ -1,13 +1,13 @@
 const pgp = require('pg-promise')();
 
-const db = pgp('postgres://postgres:gusti@localhost:5432/FlightData');
+const db = pgp('postgres://postgres:dadi@localhost:5432/FlightData');
 
 // Create the tables!
 function createTables() {
   // Arrival table created.
   db.none('CREATE TABLE IF NOT EXISTS arrivals( \
             id             SERIAL PRIMARY KEY,  \
-            flightDate     varchar(20),         \
+            flightDate     timestamp,                \
             flightNumber   varchar(20),         \
             airline        varchar(64),         \
             fromDest       varchar(64),         \
@@ -27,7 +27,7 @@ function createTables() {
   // Departure table created.
   db.none('CREATE TABLE IF NOT EXISTS departures( \
             id               SERIAL PRIMARY KEY,  \
-            flightDate       varchar(20),         \
+            flightDate       timestamp,                \
             flightNumber     varchar(20),         \
             airline          varchar(64),         \
             toDest           varchar(64),         \
@@ -110,6 +110,52 @@ function getAllAirlines() {
                  GROUP BY airline', [true]);
 }
 
+// Next two functions take the number of days you want to see back in time,
+// returns the average delay for each airline from those days.
+function getAvgArrivalDelayPastXDays(numDays){
+  return db.any("SELECT airline, ROUND(AVG(delay)) AS avgDelay FROM arrivals \
+                 WHERE onTimeOrEarly = false AND                             \
+                 flightDate >= CURRENT_DATE - INTERVAL '$1 DAY'             \
+                 GROUP BY airline", [numDays]);
+}
+function getAvgDepartureDelayPastXDays(numDays){
+  return db.any("SELECT airline, ROUND(AVG(delay)) AS avgDelay FROM departures \
+                 WHERE onTimeOrEarly = false AND                             \
+                 flightDate >= CURRENT_DATE - INTERVAL '$1 DAY'             \
+                 GROUP BY airline", [numDays]);
+}
+
+function getAvgDepartureDelayPastXDaysForAirline(numDays, airline){
+  return db.any("SELECT flightDate, ROUND(AVG(delay)) AS avgDelay FROM departures \
+                 WHERE onTimeOrEarly = false AND                             \
+                 flightDate >= CURRENT_DATE - INTERVAL '$1 DAY' AND   \
+                 airline = $2             \
+                 GROUP BY flightDate", [numDays, airline]);
+}
+function getAvgArrivalDelayPastXDaysForAirline(numDays, airline){
+  return db.any("SELECT flightDate, ROUND(AVG(delay)) AS avgDelay FROM arrivals \
+                 WHERE onTimeOrEarly = false AND                             \
+                 flightDate >= CURRENT_DATE - INTERVAL '$1 DAY' AND      \
+                 airline = $2             \
+                 GROUP BY  flightDate", [numDays, airline]);
+}
+
+function getAllArrivalsAirlineNamesPastXDays(days){
+  return db.any("SELECT airline FROM arrivals WHERE   \
+                 flightDate >= CURRENT_DATE - INTERVAL '$1 DAY' \
+                 GROUP BY airline" , [days]);
+}
+function getAllDeparturesAirlineNamesPastXDays(days){
+  return db.any("SELECT airline FROM departures WHERE   \
+                 flightDate >= CURRENT_DATE - INTERVAL '$1 DAY' \
+                 GROUP BY airline" , [days]);
+}
+
+
+function test(){
+  return db.any("SELECT flightDate from arrivals where    \
+                flightDate >= CURRENT_DATE - INTERVAL '50 DAY'",[true]);
+}
 
 module.exports = {
   createTables,
@@ -118,5 +164,12 @@ module.exports = {
   getAllArrivals,
   getAllDepartures,
   getAvgDepartureDelayAllAirlines,
-  getAvgArrivalDelayAllAirlines
+  getAvgArrivalDelayAllAirlines,
+  getAvgArrivalDelayPastXDays,
+  test,
+  getAvgDepartureDelayPastXDays,
+  getAvgArrivalDelayPastXDaysForAirline,
+  getAvgDepartureDelayPastXDaysForAirline,
+  getAllArrivalsAirlineNamesPastXDays,
+  getAllDeparturesAirlineNamesPastXDays,
 };
