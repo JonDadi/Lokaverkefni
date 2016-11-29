@@ -7,12 +7,17 @@ let currentFlights = [];
 let timerOn = false;
 
 // Keeping track of recently saved flights to avoid saving duplicates.
-let recentlySavedFlights = [];
+let recentlySavedDepartingFlights = [];
+let recentlySavedArrivingFlights = [];
 
 function initFlightSaver() {
   flights.flights('en', 'departures')
   .then((data) => {
     const departure = true;
+    if (flightArraysEqual(data.data.results, recentlySavedDepartingFlights)){
+      return;
+    }
+    recentlySavedDepartingFlights = [];
     saveFlights(data.data.results, departure);
   })
   .catch((error) => {
@@ -22,6 +27,10 @@ function initFlightSaver() {
   flights.flights('en', 'arrivals')
   .then((data) => {
     departure = false;
+    if(flightArraysEqual(data.data.results, recentlySavedArrivingFlights)){
+      return;
+    }
+    recentlySavedArrivingFlights = [];
     saveFlights(data.data.results, departure);
   })
   .catch((error) => {
@@ -42,23 +51,32 @@ function compareToCurrentArray(data){
 */
 
 function saveFlights(flights, departure) {
-  // Don't save if the data hasn't changed.
-  if (flightArraysEqual(flights, recentlySavedFlights)) {  return; }
-  recentlySavedFlights = [];
+
   for (let i = 0; i < flights.length; i++) {
     // Calculate the delay
     flights[i].delay = getDelay(flights[i], departure);
+    // Change the date to something postgresql can understand
+    flights[i].date = getFormatedDate(flights[i]);
     if (departure) {
      db.insertDepartureFlight(flights[i]);
+     recentlySavedDepartingFlights.push(flights[i]);
    } else {
      db.insertArrivalFlight(flights[i]);
-   }
-    // Add it to our recently saved flight list, so we don't
-    // insert it again later.
-    recentlySavedFlights.push(flights[i]);
+     recentlySavedArrivingFlights.push(flights[i]);
+    }
   }
 }
 
+function getFormatedDate(flight){
+
+  const flightDate = flight.date;
+  const currDate = new Date();
+  const currentYear = currDate.getFullYear();
+  const month = flightDate.substring(flightDate.length-3, flightDate.length);
+  const day = flightDate.substring(0, 2);
+  const formatedDate = day+'-'+month+'-'+currentYear;
+  return formatedDate;
+}
 /*
 function getUnsavedDepartedFlights(flights){
   let unsavedFlights = [];

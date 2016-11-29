@@ -76,7 +76,7 @@ router.get('/json/avgDepDelay', (req, res, next) => {
 });
 
 router.get('/json/avgArrDelay', (req, res, next) => {
-  db.getAvgArrivalDelayAllAirlines()
+  db.test()
   .then((data) => {
     res.json(data);
   });
