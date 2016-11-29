@@ -107,13 +107,6 @@ let Charts = (function() {
     });
 
 
-
-
-
-
-
-
-
     function fillDepartureAirlineSelectionInput(airlines){
       let option;
       for(let i = 0; i<airlines.length; i++){
@@ -154,7 +147,6 @@ let Charts = (function() {
           data: {
               labels: x,
               datasets: [{
-                  label: title,
                   data: y,
                   backgroundColor: [
                       'rgba(255, 99, 132, 0.6)',
@@ -162,7 +154,11 @@ let Charts = (function() {
                       'rgba(255, 206, 86, 0.6)',
                       'rgba(75, 192, 192, 0.6)',
                       'rgba(153, 102, 255, 0.6)',
-                      'rgba(255, 159, 64, 0.6)'
+                      'rgba(255, 159, 64, 0.6)',
+                      'rgba(0, 102, 255, 0.6)',
+                      'rgba(153, 0, 255, 0.6)',
+                      'rgba(153, 102, 0, 0.6)',
+                      'rgba(0, 200, 100, 0.6)'
                   ],
                   borderColor: [
                       'rgba(255,99,132,1)',
@@ -170,12 +166,23 @@ let Charts = (function() {
                       'rgba(255, 206, 86, 1)',
                       'rgba(75, 192, 192, 1)',
                       'rgba(153, 102, 255, 1)',
-                      'rgba(255, 159, 64, 1)'
+                      'rgba(255, 159, 64, 1)',
+                      'rgba(0, 102, 255, 1)',
+                      'rgba(153, 0, 255, 1)',
+                      'rgba(153, 102, 0, 1)',
+                      'rgba(0, 200, 100, 1)'
                   ],
                   borderWidth: 1
               }]
           },
           options: {
+              legend: {
+                  display: false
+              },
+              title: {
+                display: true,
+                text: title
+              },
               responsive: true,
               maintainAspectRatio: false,
               scales: {
@@ -205,7 +212,6 @@ let Charts = (function() {
       var data = {
         labels: x,
         datasets: [ {
-            label: label,
             fill: false,
             lineTension: 0.1,
             backgroundColor: "rgba(75,192,192,0.4)",
@@ -231,6 +237,13 @@ let Charts = (function() {
       const myChart = Chart.Line(canvas, {
           data: data,
           options: {
+              legend: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: label
+              },
               responsive: true,
               maintainAspectRatio: false,
               scales: {

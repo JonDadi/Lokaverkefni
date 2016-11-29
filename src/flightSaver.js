@@ -99,6 +99,15 @@ function getUnsavedDepartedFlights(flights){
 
 function getDelay(flight, departure) {
   const plannedTime = flight.plannedArrival;
+  if (flight.realArrival === 'On Time' ||
+        flight.realArrival === "" ||
+        flight.realArrival.includes("Cancelled") ||
+        flight.realArrival.includes("Gate") ||
+        flight.realArrival.includes("Confirm") ||
+        flight.realArrival.includes("Estimat")) {
+    return;
+  }
+
   let realTime = "";
   if (departure) {
     realTime = flight.realArrival.replace('Departed ', '');
