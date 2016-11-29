@@ -98,57 +98,54 @@ function getUnsavedDepartedFlights(flights){
 */
 
 function getDelay(flight, departure) {
-  const plannedTime = flight.plannedArrival;
-  if (flight.realArrival === 'On Time' ||
-        flight.realArrival === "" ||
-        flight.realArrival.includes("Cancelled") ||
-        flight.realArrival.includes("Gate") ||
-        flight.realArrival.includes("Confirm") ||
-        flight.realArrival.includes("Estimat")) {
-    return;
-  }
+  if (flight.realArrival.includes("Departed") ||
+      flight.realArrival.includes("Landed")) {
+        const plannedTime = flight.plannedArrival;
 
-  let realTime = "";
-  if (departure) {
-    realTime = flight.realArrival.replace('Departed ', '');
-  } else {
-    realTime = flight.realArrival.replace('Landed ', '');
-  }
+        let realTime = "";
+        if (departure) {
+          realTime = flight.realArrival.replace('Departed ', '');
+        } else {
+          realTime = flight.realArrival.replace('Landed ', '');
+        }
 
-  const realDate = constructDate(flight.date, realTime);
-  const plannedDate = constructDate(flight.date, plannedTime);
+        const realDate = constructDate(flight.date, realTime);
+        const plannedDate = constructDate(flight.date, plannedTime);
 
-  // We need to check if a flight has delay that spans over midnight
-  // if that happens we need to add a day to plannedDate.
+        // We need to check if a flight has delay that spans over midnight
+        // if that happens we need to add a day to plannedDate.
 
-  let timeDiff = realDate - plannedDate;
-  let minutes = Math.floor((timeDiff / 1000) / 60);
+        let timeDiff = realDate - plannedDate;
+        let minutes = Math.floor((timeDiff / 1000) / 60);
 
-  // If minutes is negative then that means the plane has departed
-  // earlier than planned.  This is normal up to a certain extent,
-  // because flights might leave a little early.
-  // If minutes is a large negative number then that indicates that the flights
-  // was planned just before midnight but left after midnight.
-  // If we see that a flight is leaving/arriving more than 60 minutes before
-  // planned time then we assume the flight is close to midnight,  and we
-  // add a day to the confirmed landing/departed date.
-  if(minutes < -60){
-    realDate.setDate(realDate.getDate()+1);
-    timeDiff = realDate - plannedDate;
-    minutes = Math.floor((timeDiff / 1000) / 60);
-    flight.onTime = false;
-    return minutes;
-  }
-  else if (minutes > -60 && minutes <= 0) {
-    flight.onTime = true;
-  }
-  else {
-    flight.onTime = false;
-  }
+        // If minutes is negative then that means the plane has departed
+        // earlier than planned.  This is normal up to a certain extent,
+        // because flights might leave a little early.
+        // If minutes is a large negative number then that indicates that the flights
+        // was planned just before midnight but left after midnight.
+        // If we see that a flight is leaving/arriving more than 60 minutes before
+        // planned time then we assume the flight is close to midnight,  and we
+        // add a day to the confirmed landing/departed date.
+        if(minutes < -60){
+          realDate.setDate(realDate.getDate()+1);
+          timeDiff = realDate - plannedDate;
+          minutes = Math.floor((timeDiff / 1000) / 60);
+          flight.onTime = false;
+          return minutes;
+        }
+        else if (minutes > -60 && minutes <= 0) {
+          flight.onTime = true;
+        }
+        else {
+          flight.onTime = false;
+        }
 
-  if (isNaN(minutes)) return 0;
+        if (isNaN(minutes)) return 0;
 
-  return minutes;
+        return minutes;
+      } else {
+        return;
+      }
 }
 
 
