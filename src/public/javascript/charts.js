@@ -154,16 +154,29 @@ let Charts = (function() {
                 backgroundColor: 'rgba(255,50,50,1)',
                 borderWidth: 1
               }, {
-                label: "Nr of flights",
+                label: "Nr of delayed flights",
                 data: z,
                 backgroundColor: 'rgba(50,50,255,1)',
                 borderWidth: 1
               }]
           },
           options: {
-              // legend: {
-              //     display: false
-              // },
+              animation: {
+                onComplete: function () {
+                  let chartInstance = this.chart;
+                  let ctx = chartInstance.ctx;
+                  let height = chartInstance.controller.boxes[0].bottom;
+
+                  ctx.textAlign = "center";
+                  Chart.helpers.each(this.data.datasets.forEach(function (dataset, i) {
+                    var meta = chartInstance.controller.getDatasetMeta(i);
+                    Chart.helpers.each(meta.data.forEach(function (bar, index) {
+                      ctx.fillStyle = "#000000";
+                      ctx.fillText(dataset.data[index], bar._model.x, height - ((height - bar._model.y) / 1.5));
+                    }),this)
+                  }),this);
+                }
+              },
               title: {
                 display: true,
                 text: title
