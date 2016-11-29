@@ -1,33 +1,6 @@
 body {
   padding-top: 70px;
   font: 16px "Lato", Helvetica, Arial, sans-serif;
-  /*font-family: 'Lato', sans-serif;*/
-}
-
-a:hover, a:visited, a:link, a:active
-{
-    text-decoration: none;
-}
-
-.schedule-item {
-  outline: 1px solid;
-  margin: 0 auto;
-  text-decoration: none;
-  color: black;
-}
-
-/*.schedule {
-  position: relative;
-}*/
-
-.flex {
-  display: flex;
-  top: 1em;
-  right: 1em;
-}
-
-.justify {
-  justify-content: space-around;
 }
 
 .iframe {
@@ -44,10 +17,8 @@ a:hover, a:visited, a:link, a:active
   margin: 0 auto;
   margin-bottom: 50px;
 }
-/*.row {
-  outline: 1px solid;
-}*/
 
-/*.col-md-3 {
-  outline: 1px solid;
-}*/
+.navbar-nav li:hover {
+	background-color: #999;
+	transition: 0.7s all linear;
+}

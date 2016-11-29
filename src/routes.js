@@ -74,6 +74,14 @@ router.get('/json/avgDepDelay', (req, res, next) => {
   });
 });
 
+router.get('/about', (req, res, next) => {
+    res.render('about', { title: 'About this page' });
+    // })
+    // .catch((error) => {
+    //   res.render('error', { title: 'Something went wrong!', error });
+    // });
+});
+
 router.get('/json/avgArrDelay', (req, res, next) => {
   db.getAvgArrivalDelayAllAirlines()
   .then((data) => {

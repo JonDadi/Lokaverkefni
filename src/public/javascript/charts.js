@@ -129,11 +129,13 @@ let Charts = (function() {
     function parseAndCreateChart(canvas, flights, title){
       let airline = [];
       let delay = [];
+      let count = [];
       for(let i = 0; i<flights.length; i++){
         airline.push(flights[i].airline);
         delay.push(flights[i].avgdelay);
+        count.push(flights[i].count);
       }
-      createBarChart(canvas, airline, delay, title)
+      createBarChart(canvas, airline, delay, count, title)
     }
 
     function getPrettyTimeStamp(timeStamp){
@@ -141,44 +143,27 @@ let Charts = (function() {
       const day = timeStamp.substring(8,10)
       return day+'/'+month;
     }
-    function createBarChart(canvas, x, y, title){
+    function createBarChart(canvas, x, y, z, title){
       const myChart = new Chart(canvas, {
           type: 'bar',
           data: {
               labels: x,
               datasets: [{
-                  data: y,
-                  backgroundColor: [
-                      'rgba(255, 99, 132, 0.6)',
-                      'rgba(54, 162, 235, 0.6)',
-                      'rgba(255, 206, 86, 0.6)',
-                      'rgba(75, 192, 192, 0.6)',
-                      'rgba(153, 102, 255, 0.6)',
-                      'rgba(255, 159, 64, 0.6)',
-                      'rgba(0, 102, 255, 0.6)',
-                      'rgba(153, 0, 255, 0.6)',
-                      'rgba(153, 102, 0, 0.6)',
-                      'rgba(0, 200, 100, 0.6)'
-                  ],
-                  borderColor: [
-                      'rgba(255,99,132,1)',
-                      'rgba(54, 162, 235, 1)',
-                      'rgba(255, 206, 86, 1)',
-                      'rgba(75, 192, 192, 1)',
-                      'rgba(153, 102, 255, 1)',
-                      'rgba(255, 159, 64, 1)',
-                      'rgba(0, 102, 255, 1)',
-                      'rgba(153, 0, 255, 1)',
-                      'rgba(153, 102, 0, 1)',
-                      'rgba(0, 200, 100, 1)'
-                  ],
-                  borderWidth: 1
+                label: "Delay in minutes",
+                data: y,
+                backgroundColor: 'rgba(255,50,50,1)',
+                borderWidth: 1
+              }, {
+                label: "Nr of flights",
+                data: z,
+                backgroundColor: 'rgba(50,50,255,1)',
+                borderWidth: 1
               }]
           },
           options: {
-              legend: {
-                  display: false
-              },
+              // legend: {
+              //     display: false
+              // },
               title: {
                 display: true,
                 text: title

@@ -1,19 +1,24 @@
 extends layout
 
 block content
-  //- nav
-  //-   div.flex.justify
-  //-     h2 Flights
-  //-     h2 Statistics
   header
     nav.navbar.navbar-default.navbar-fixed-top
       div.container
         div
+          button(data-toggle="collapse" data-target="#navbar").navbar-toggle.collapsed
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        div.collapse.navbar-collapse#navbar
           ul.nav.navbar-nav
             li.active
               a(href= "/").text-uppercase Flights
             li
               a(href= "/statistics").text-uppercase Statistics
+          ul.nav.navbar-nav.navbar-right
+            li
+              a(href= "/about").text-uppercase About
   div.main.container
     div.row
       div.col-md-3.text-center
@@ -26,36 +31,31 @@ block content
       h2 Engin flug fundust!
     else
       div.row
-        div.col-md-6.schedule
+        div.col-md-6
           div.row.text-center
             h1= title
-          div.row
-            h5.col-md-3
-              b Date
-            h5.col-md-2
-              b Flight number
-            if type == "arrivals"
-              h5.col-md-3
-                b From
-              h5.col-md-2
-                b Planned arrival
-            else
-              h5.col-md-3
-                b To
-              h5.col-md-2
-                b Planned Departure
-            h5.col-md-2
-              b Status
-          each val in schedule
-            div.row
-              h4.col-md-3= val.date
-              h4.col-md-2= val.flightNumber
-              if type == "arrivals"
-                h4.col-md-3= val.from
-              else
-                h4.col-md-3= val.to
-              h4.col-md-2= val.plannedArrival
-              h4.col-md-2= val.realArrival
+          div.table-responsive
+            table.table.table-striped
+              tr
+                th Date
+                th Flight number
+                if type == "arrivals"
+                  th From
+                  th Planned arrival
+                else
+                  th To
+                  th Planned Departure
+                th Status
+              each val in schedule
+                tr
+                  td= val.date
+                  td= val.flightNumber
+                  if type == "arrivals"
+                    td= val.from
+                  else
+                    td= val.to
+                  td= val.plannedArrival
+                  td= val.realArrival
         div.col-md-6.iframe#iframe
           h4.text-center Only showing in/outbound flights from Keflavík
           iframe(src="https://www.flightradar24.com/simple?lat=63.80&lon=-21.00&z=7&airports=1&airport_filter=KEF:inout" width="600" height="450")
