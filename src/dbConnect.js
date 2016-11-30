@@ -177,6 +177,20 @@ function getTotalFlightsAndTimelyDepartures() {
                  ON tot.airline = d.airline', [true])
 }
 
+function getTotalFlightsAndTimelyArrivals() {
+  return db.any('with tot as ( SELECT airline, COUNT(onTimeOrEarly) as Total  \
+		                           FROM arrivals                                \
+		                           GROUP BY airline                               \
+		                          )                                               \
+                 SELECT tot.airline, total, timely                            \
+                 FROM tot JOIN (SELECT airline, COUNT(onTimeOrEarly) as Timely\
+		                            FROM arrivals                               \
+		                            WHERE onTimeOrEarly = true                    \
+		                            GROUP BY airline                              \
+		                            ) AS d                                        \
+                 ON tot.airline = d.airline', [true])
+}
+
 function test() {
   return db.any('SELECT flightDate from arrivals where    \
                 flightDate >= CURRENT_DATE - INTERVAL \'50 DAY\'', [true]);
@@ -200,4 +214,5 @@ module.exports = {
   getRecentlySavedArriving,
   getRecentlySavedDeparting,
   getTotalFlightsAndTimelyDepartures,
+  getTotalFlightsAndTimelyArrivals,
 };

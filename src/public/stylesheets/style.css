@@ -23,3 +23,7 @@ body {
 	background-color: #999;
 	transition: 0.7s all linear;
 }
+
+.about {
+  margin-bottom: 70px;
+}

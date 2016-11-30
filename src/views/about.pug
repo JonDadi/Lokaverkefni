@@ -20,29 +20,30 @@ block content
             li.active
               a(href= "/about").text-uppercase About
   div.main.container
-    h1= title
-    div
-      p This page was made as a final project in a web programming course at the University of Iceland. It was made over the course of 5 days at the end of November 2016.
-    div
-      h2 Creators
-      p Gústaf Halldór Gústafsson and Jón Daði Jónsson
-    div
-      h2 Technology
-      p We used Node.js as our development platform, with Express as our web application framework and using Axios to retrieve flight data.
-      p Flight data is retrieved from #[a(href="https://apis.is") https://apis.is]
-      p Pug (formerly Jade) is used as a template engine.
-      p Styling is done with Twitter Boostrap.
-      p The #[a(href="http://www.chartjs.org/") Chart.js] library is used for creating the graphs in the statistics section.
-      p The iframe holding the map is linked to #[a(href="https://www.flightradar24.com/") flightradar24.com] with filters showing only traffic inbound/outbound to/from Keflavík.
-    div
-      h2 Functionality
-      p
-      | Front page ("Flights") shows arrivals/departures to/from Keflavík airport for today's date.
-      | The map on the page (not visible to small display devices) is a map showing live traffic in and out of Keflavík.
-      | There is a filter in place which takes care of only showing flights to/from Keflavík, so don't be surprised if there are only a few flights (or any!) visible when you zoom out.
-      p
-      | The statistics page ("Statistics") shows data we found interesting, gathered from the flights that have accumulated over time in our database.
-      | The data is shown visually using bar/line graphs.
-      p
-      | The about page ("About") is the page you are on now.
-      | But you already knew that.
+    div.section.about
+      h1= title
+      div
+        p This page was made as a final project in a web programming course at the University of Iceland. It was made over the course of 5 days at the end of November 2016.
+      div
+        h2 Creators
+        p Gústaf Halldór Gústafsson and Jón Daði Jónsson
+      div
+        h2 Technology
+        p We used Node.js as our development platform, with Express as our web application framework and using Axios to retrieve flight data.
+        p Flight data is retrieved from #[a(href="https://apis.is") https://apis.is]
+        p Pug (formerly Jade) is used as a template engine.
+        p Styling is done with Twitter Boostrap.
+        p The #[a(href="http://www.chartjs.org/") Chart.js] library is used for creating the graphs in the statistics section.
+        p The iframe holding the map is linked to #[a(href="https://www.flightradar24.com/") flightradar24.com] with filters showing only traffic inbound/outbound to/from Keflavík.
+      div
+        h2 Functionality
+        p
+        | Front page ("Flights") shows arrivals/departures to/from Keflavík airport for today's date.
+        | The map on the page (not visible to small display devices) is a map showing live traffic in and out of Keflavík.
+        | There is a filter in place which takes care of only showing flights to/from Keflavík, so don't be surprised if there are only a few flights (or any!) visible when you zoom out.
+        p
+        | The statistics page ("Statistics") shows data we found interesting, gathered from the flights that have accumulated over time in our database.
+        | The data is shown visually using bar/line graphs.
+        p
+        | The about page ("About") is the page you are on now.
+        | But you already knew that.
