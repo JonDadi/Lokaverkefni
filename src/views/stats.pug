@@ -39,6 +39,26 @@ block content
       input(id="depNumDays" type="number", min="0", max="30", step="1", value="0")
       button(id="departureBtn" type="button") Get Data!
       canvas#myDepDelPerDayAirlLine()
+    div.graphsContainer
+      h1 Flight Statistics
+      section.graphGroup
+        div.graphWrapper
+          canvas#myDepChart()
+        div.graphWrapper
+          canvas#myArrChart()
+      section.graphGroup
+        div.graphWrapper
+          canvas#myDepXDaysChart()
+        div.graphWrapper
+          select(id="airlSelectArr", name="Airline_selection")
+          input(id="arrNumDays" type="number", min="0", max="30", step="1", value="0")
+          button.btn.btn-primary.text(id="arrivalsBtn" type="button") Get Data!
+          canvas#myArrDelPerDayAirlLine()
+        div.graphWrapper
+          select(id="airlSelectDep", name="Airline_selection")
+          input(id="depNumDays" type="number", min="0", max="30", step="1", value="0")
+          button.btn.btn-primary.text(id="departureBtn" type="button") Get Data!
+          canvas#myDepDelPerDayAirlLine()
   script(type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js')
   script(type='text/javascript' src='javascript/libs/Chart.js')
   script(type='text/javascript' src='javascript/charts.js')
