@@ -4,7 +4,7 @@ const db = require('./dbConnect');
 const schedule = require('node-schedule');
 
 // Number of minutes between API calls.
-const MINUTE_INTERVAL = 1
+const MINUTE_INTERVAL = 1;
 
 // Keeping track of recently saved flights to avoid saving duplicates.
 let recentlySavedDepartingFlights = [];
