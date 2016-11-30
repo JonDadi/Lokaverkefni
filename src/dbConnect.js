@@ -66,9 +66,9 @@ function insertArrivalFlight(flightData) {
 
 // Inserts information about an departing flight.
 function insertDepartureFlight(flightData) {
-  db.none('INSERT INTO departures(flightDate, flightNumber, toDest, airline,    \
-                                  plannedDeparture, realDeparture,              \
-                                  flightStatus, delay, onTimeOrEarly)           \
+  db.none('INSERT INTO departures(flightDate, flightNumber, toDest, airline,  \
+                                  plannedDeparture, realDeparture,            \
+                                  flightStatus, delay, onTimeOrEarly)         \
                       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)',
                       [flightData.date, flightData.flightNumber,
                        flightData.to, flightData.airline,
@@ -96,12 +96,14 @@ function getAllArrivals(callBack) {
 }
 
 function getAvgDepartureDelayAllAirlines() {
-  return db.any('SELECT airline, ROUND(AVG(delay)) AS avgDelay FROM departures \
+  return db.any('SELECT airline, ROUND(AVG(delay)) AS avgDelay,         \
+                 COUNT(onTimeOrEarly) FROM departures                   \
                  WHERE onTimeOrEarly = false GROUP BY airline', [true]);
 }
 
 function getAvgArrivalDelayAllAirlines() {
-  return db.any('SELECT airline, ROUND(AVG(delay)) AS avgDelay FROM arrivals \
+  return db.any('SELECT airline, ROUND(AVG(delay)) AS avgDelay,         \
+                 COUNT(onTimeOrEarly) FROM arrivals                     \
                  WHERE onTimeOrEarly = false GROUP BY airline', [true]);
 }
 
@@ -112,49 +114,51 @@ function getAllAirlines() {
 
 // Next two functions take the number of days you want to see back in time,
 // returns the average delay for each airline from those days.
-function getAvgArrivalDelayPastXDays(numDays){
-  return db.any("SELECT airline, ROUND(AVG(delay)) AS avgDelay FROM arrivals \
+function getAvgArrivalDelayPastXDays(numDays) {
+  return db.any("SELECT airline, ROUND(AVG(delay)) AS avgDelay,   \
+                 COUNT(onTimeOrEarly) FROM arrivals               \
                  WHERE onTimeOrEarly = false AND                             \
                  flightDate >= CURRENT_DATE - INTERVAL '$1 DAY'             \
                  GROUP BY airline", [numDays]);
 }
-function getAvgDepartureDelayPastXDays(numDays){
+function getAvgDepartureDelayPastXDays(numDays) {
   return db.any("SELECT airline, ROUND(AVG(delay)) AS avgDelay FROM departures \
                  WHERE onTimeOrEarly = false AND                             \
                  flightDate >= CURRENT_DATE - INTERVAL '$1 DAY'             \
                  GROUP BY airline", [numDays]);
 }
 
-function getAvgDepartureDelayPastXDaysForAirline(numDays, airline){
-  return db.any("SELECT flightDate, ROUND(AVG(delay)) AS avgDelay FROM departures \
+function getAvgDepartureDelayPastXDaysForAirline(numDays, airline) {
+  return db.any("SELECT flightDate, ROUND(AVG(delay)) AS avgDelay     \
+                 FROM departures          \
                  WHERE onTimeOrEarly = false AND                             \
                  flightDate >= CURRENT_DATE - INTERVAL '$1 DAY' AND   \
                  airline = $2             \
                  GROUP BY flightDate", [numDays, airline]);
 }
-function getAvgArrivalDelayPastXDaysForAirline(numDays, airline){
-  return db.any("SELECT flightDate, ROUND(AVG(delay)) AS avgDelay FROM arrivals \
+function getAvgArrivalDelayPastXDaysForAirline(numDays, airline) {
+  return db.any("SELECT flightDate, ROUND(AVG(delay)) AS avgDelay FROM arrivals\
                  WHERE onTimeOrEarly = false AND                             \
                  flightDate >= CURRENT_DATE - INTERVAL '$1 DAY' AND      \
                  airline = $2             \
                  GROUP BY  flightDate", [numDays, airline]);
 }
 
-function getAllArrivalsAirlineNamesPastXDays(days){
+function getAllArrivalsAirlineNamesPastXDays(days) {
   return db.any("SELECT airline FROM arrivals WHERE   \
                  flightDate >= CURRENT_DATE - INTERVAL '$1 DAY' \
-                 GROUP BY airline" , [days]);
+                 GROUP BY airline", [days]);
 }
-function getAllDeparturesAirlineNamesPastXDays(days){
+function getAllDeparturesAirlineNamesPastXDays(days) {
   return db.any("SELECT airline FROM departures WHERE   \
                  flightDate >= CURRENT_DATE - INTERVAL '$1 DAY' \
-                 GROUP BY airline" , [days]);
+                 GROUP BY airline", [days]);
 }
 
 
-function test(){
+function test() {
   return db.any("SELECT flightDate from arrivals where    \
-                flightDate >= CURRENT_DATE - INTERVAL '50 DAY'",[true]);
+                flightDate >= CURRENT_DATE - INTERVAL '50 DAY'", [true]);
 }
 
 module.exports = {

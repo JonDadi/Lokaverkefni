@@ -62,7 +62,7 @@ router.get('/f/:type', (req, res, next) => {
 
 /* GET flight schedule */
 router.get('/statistics/', (req, res, next) => {
-   db.createTables();
+  db.createTables();
   flightSaver.initFlightSaver();
   res.render('stats', { title: 'Flight Statistics' });
 });
@@ -75,11 +75,7 @@ router.get('/json/avgDepDelay', (req, res, next) => {
 });
 
 router.get('/about', (req, res, next) => {
-    res.render('about', { title: 'About this page' });
-    // })
-    // .catch((error) => {
-    //   res.render('error', { title: 'Something went wrong!', error });
-    // });
+  res.render('about', { title: 'About this page' });
 });
 
 router.get('/json/avgArrDelay', (req, res, next) => {
@@ -103,27 +99,32 @@ router.get('/json/getDepartureDelayXDaysBack/:days', (req, res, next) => {
   });
 });
 
-router.get('/json/getDepDelayXDaysBackAirline/:airline/:days', (req, res, next) => {
-  db.getAvgArrivalDelayPastXDaysForAirline(parseInt(req.params.days), req.params.airline)
-  .then((data) => {
-    res.json(data);
-  });
-});
-router.get('/json/getArrDelayXDaysBackAirline/:airline/:days', (req, res, next) => {
-  db.getAvgArrivalDelayPastXDaysForAirline(parseInt(req.params.days), req.params.airline)
+router.get('/json/getDepDelayXDaysBackAirline/:airline/:days',
+(req, res, next) => {
+  db.getAvgArrivalDelayPastXDaysForAirline(parseInt(req.params.days),
+  req.params.airline)
   .then((data) => {
     res.json(data);
   });
 });
 
+router.get('/json/getArrDelayXDaysBackAirline/:airline/:days',
+(req, res, next) => {
+  db.getAvgArrivalDelayPastXDaysForAirline(parseInt(req.params.days),
+  req.params.airline)
+  .then((data) => {
+    res.json(data);
+  });
+});
 
-//Get the airlines available
+// Get the airlines available
 router.get('/json/getArrAirlines/:days', (req, res, next) => {
   db.getAllArrivalsAirlineNamesPastXDays(parseInt(req.params.days))
   .then((data) => {
     res.json(data);
   });
 });
+
 router.get('/json/getDepAirlines/:days', (req, res, next) => {
   db.getAllDeparturesAirlineNamesPastXDays(parseInt(req.params.days))
   .then((data) => {
