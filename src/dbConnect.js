@@ -151,6 +151,15 @@ function getAllDeparturesAirlineNamesPastXDays(days){
                  GROUP BY airline" , [days]);
 }
 
+function getRecentlySavedArriving(NumFlights){
+  return db.any("SELECT flightNumber, flightDate FROM arrivals  \
+                 WHERE id > (SELECT MAX(id) FROM arrivals)-$1" , [NumFlights]);
+}
+
+function getRecentlySavedDeparting(NumFlights){
+  return db.any("SELECT flightNumber, flightDate FROM departures  \
+                 WHERE id > (SELECT MAX(id) FROM departures)-$1" , [NumFlights]);
+}
 
 function test(){
   return db.any("SELECT flightDate from arrivals where    \
@@ -172,4 +181,6 @@ module.exports = {
   getAvgDepartureDelayPastXDaysForAirline,
   getAllArrivalsAirlineNamesPastXDays,
   getAllDeparturesAirlineNamesPastXDays,
+  getRecentlySavedArriving,
+  getRecentlySavedDeparting,
 };

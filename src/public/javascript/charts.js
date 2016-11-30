@@ -185,10 +185,7 @@ let Charts = (function() {
       let days = [];
       let delay = [];
       for(let i = 0; i<data.length; i++){
-        //Take the substring to remove the year and min/hour/seconds as it
-        //is irrelevant.  We only want day and month.
         days.push(getPrettyTimeStamp(data[i].flightdate));
-        console.log(typeof(data[i].flightdate))
         delay.push(data[i].avgdelay);
       }
       createLineChart(canvas, days, delay, title)
