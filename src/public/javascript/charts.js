@@ -244,8 +244,8 @@ const Charts = (() => {
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       success: (data) => {
-        parseAndCreateChart(ctx1, data, `Average departure delay per
-                            airline for the past 7 days`, true);
+        parseAndCreateChart(ctx1, data,
+        'Average departure delay per airline for the past 7 days', true);
       },
     });
 
@@ -255,8 +255,8 @@ const Charts = (() => {
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       success: (data) => {
-        parseAndCreateChart(ctx2, data, `Average arrival delay per
-                            airline for the past 7 days`, true);
+        parseAndCreateChart(ctx2, data,
+          'Average arrival delay per airline for the past 7 days', true);
       },
     });
 
@@ -266,8 +266,8 @@ const Charts = (() => {
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       success: (data) => {
-        parseAndCreateChart(ctx3, data, `Total flights per airline and the number
-                            of flights on time or early`, false);
+        parseAndCreateChart(ctx3, data,
+        'Total flights per airline and the number of flights on time or early', false);
       },
     });
 
@@ -277,8 +277,8 @@ const Charts = (() => {
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       success: (data) => {
-        parseAndCreateChart(ctx6, data, `Total flights per airline and the
-                            number of flights that arrived on time or early`, false);
+        parseAndCreateChart(ctx6, data,
+        'Total flights per airline and the number of flights that arrived on time or early', false);
       },
     });
   }
