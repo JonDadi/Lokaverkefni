@@ -7,7 +7,7 @@ function createTables() {
   // Arrival table created.
   db.none('CREATE TABLE IF NOT EXISTS arrivals( \
             id             SERIAL PRIMARY KEY,  \
-            flightDate     timestamp,                \
+            flightDate     timestamp,           \
             flightNumber   varchar(20),         \
             airline        varchar(64),         \
             fromDest       varchar(64),         \
@@ -27,7 +27,7 @@ function createTables() {
   // Departure table created.
   db.none('CREATE TABLE IF NOT EXISTS departures( \
             id               SERIAL PRIMARY KEY,  \
-            flightDate       timestamp,                \
+            flightDate       timestamp,           \
             flightNumber     varchar(20),         \
             airline          varchar(64),         \
             toDest           varchar(64),         \
@@ -107,11 +107,6 @@ function getAvgArrivalDelayAllAirlines() {
                  WHERE onTimeOrEarly = false GROUP BY airline', [true]);
 }
 
-function getAllAirlines() {
-  return db.any('SELECT airline, FROM departures \
-                 GROUP BY airline', [true]);
-}
-
 // Next two functions take the number of days you want to see back in time,
 // returns the average delay for each airline from those days.
 function getAvgArrivalDelayPastXDays(numDays) {
@@ -155,19 +150,19 @@ function getAllDeparturesAirlineNamesPastXDays(days) {
                  GROUP BY airline", [days]);
 }
 
-function getRecentlySavedArriving(NumFlights){
-  return db.any("SELECT flightNumber, flightDate FROM arrivals  \
-                 WHERE id > (SELECT MAX(id) FROM arrivals)-$1" , [NumFlights]);
+function getRecentlySavedArriving(NumFlights) {
+  return db.any('SELECT flightNumber, flightDate FROM arrivals  \
+                 WHERE id > (SELECT MAX(id) FROM arrivals)-$1', [NumFlights]);
 }
 
-function getRecentlySavedDeparting(NumFlights){
-  return db.any("SELECT flightNumber, flightDate FROM departures  \
-                 WHERE id > (SELECT MAX(id) FROM departures)-$1" , [NumFlights]);
+function getRecentlySavedDeparting(NumFlights) {
+  return db.any('SELECT flightNumber, flightDate FROM departures  \
+                 WHERE id > (SELECT MAX(id) FROM departures)-$1', [NumFlights]);
 }
 
 function test() {
-  return db.any("SELECT flightDate from arrivals where    \
-                flightDate >= CURRENT_DATE - INTERVAL '50 DAY'", [true]);
+  return db.any('SELECT flightDate from arrivals where    \
+                flightDate >= CURRENT_DATE - INTERVAL \'50 DAY\'', [true]);
 }
 
 module.exports = {

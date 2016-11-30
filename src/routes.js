@@ -86,14 +86,14 @@ router.get('/json/avgArrDelay', (req, res, next) => {
 });
 
 router.get('/json/getArrDelayXDaysBack/:days', (req, res, next) => {
-  db.getAvgArrivalDelayPastXDays(parseInt(req.params.days))
+  db.getAvgArrivalDelayPastXDays(parseInt(req.params.days, 10))
   .then((data) => {
     res.json(data);
   });
 });
 
 router.get('/json/getDepartureDelayXDaysBack/:days', (req, res, next) => {
-  db.getAvgDepartureDelayPastXDays(parseInt(req.params.days))
+  db.getAvgDepartureDelayPastXDays(parseInt(req.params.days, 10))
   .then((data) => {
     res.json(data);
   });
@@ -101,7 +101,7 @@ router.get('/json/getDepartureDelayXDaysBack/:days', (req, res, next) => {
 
 router.get('/json/getDepDelayXDaysBackAirline/:airline/:days',
 (req, res, next) => {
-  db.getAvgArrivalDelayPastXDaysForAirline(parseInt(req.params.days),
+  db.getAvgArrivalDelayPastXDaysForAirline(parseInt(req.params.days, 10),
   req.params.airline)
   .then((data) => {
     res.json(data);
@@ -110,7 +110,7 @@ router.get('/json/getDepDelayXDaysBackAirline/:airline/:days',
 
 router.get('/json/getArrDelayXDaysBackAirline/:airline/:days',
 (req, res, next) => {
-  db.getAvgArrivalDelayPastXDaysForAirline(parseInt(req.params.days),
+  db.getAvgArrivalDelayPastXDaysForAirline(parseInt(req.params.days, 10),
   req.params.airline)
   .then((data) => {
     res.json(data);
@@ -119,19 +119,17 @@ router.get('/json/getArrDelayXDaysBackAirline/:airline/:days',
 
 // Get the airlines available
 router.get('/json/getArrAirlines/:days', (req, res, next) => {
-  db.getAllArrivalsAirlineNamesPastXDays(parseInt(req.params.days))
+  db.getAllArrivalsAirlineNamesPastXDays(parseInt(req.params.days, 10))
   .then((data) => {
     res.json(data);
   });
 });
 
 router.get('/json/getDepAirlines/:days', (req, res, next) => {
-  db.getAllDeparturesAirlineNamesPastXDays(parseInt(req.params.days))
+  db.getAllDeparturesAirlineNamesPastXDays(parseInt(req.params.days, 10))
   .then((data) => {
     res.json(data);
   });
 });
-
-
 
 module.exports = router;

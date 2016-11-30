@@ -1,6 +1,3 @@
-document.addEventListener('DOMContentLoaded', (event) => {
-  Charts.init();
-});
 
 let Charts = (() => {
   function init() {
@@ -21,93 +18,10 @@ let Charts = (() => {
     const departureBtn = document.getElementById('departureBtn');
     const arrivalBtn = document.getElementById('arrivalsBtn');
 
-    arrivalBtn.addEventListener('click', () => {
-      const airline = arrivalAirlineSelector
-                      .options[arrivalAirlineSelector.selectedIndex].value;
-      const numDays = arrivalNumDays.value;
-      console.log(airline)
-
-      $.ajax({
-        url: 'http://localhost:3000/json/getArrDelayXDaysBackAirline/'+airline+'/'+numDays,
-        type: 'GET',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: (data) => {
-          parseAndCreateLineChart(ctx4, data,
-              'Average arrival delay for airline '+airline+' the last '+numDays+' days.');
-        },
-      });
-    });
-    departureBtn.addEventListener('click', () => {
-    const airline = departureAirlineSelector
-                    .options[departureAirlineSelector.selectedIndex].value;
-    const numDays = departureNumDays.value;
-    $.ajax({
-      url: 'http://localhost:3000/json/getDepDelayXDaysBackAirline/'+airline+'/'+numDays,
-      type: 'GET',
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      success: (data) => {
-        parseAndCreateLineChart(ctx5, data,
-          'Average departure delay for airline '+airline+' the last '+numDays+' days.');
-      },
-    });
-  });
-
-    // Fill into the airline input selections
-    $.ajax({
-      url: 'http://localhost:3000/json/getArrAirlines/'+days,
-      type: 'GET',
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      success: (data) => {
-        fillArrivalAirlineSelectionInput(data);
-      },
-    });
-
-    $.ajax({
-      url: 'http://localhost:3000/json/getDepAirlines/'+days,
-      type: 'GET',
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      success: (data) => {
-        fillDepartureAirlineSelectionInput(data);
-      },
-    });
-
-    $.ajax({
-      url: 'http://localhost:3000/json/avgDepDelay',
-      type: 'GET',
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      success: (data) => {
-        parseAndCreateChart(ctx1, data, 'Average departure delay for airline');
-      },
-    });
-
-    $.ajax({
-      url: 'http://localhost:3000/json/avgArrDelay',
-      type: 'GET',
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      success: (data) => {
-        parseAndCreateChart(ctx2, data, 'Average arrival delay for airline');
-      },
-    });
-
-    $.ajax({
-      url: 'http://localhost:3000/json/getArrDelayXDaysBack/'+days,
-      type: 'GET',
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      success: (data) => {
-        parseAndCreateChart(ctx3, data, 'Average arrival delay for airline last '+days+' days');
-      },
-    });
 
     function fillDepartureAirlineSelectionInput(airlines) {
       let option;
-      for (let i = 0; i<airlines.length; i++) {
+      for (let i = 0; i < airlines.length; i++) {
         option = document.createElement('option');
         option.value = airlines[i].airline;
         option.text = airlines[i].airline;
@@ -116,7 +30,7 @@ let Charts = (() => {
     }
     function fillArrivalAirlineSelectionInput(airlines) {
       let option;
-      for (let i = 0; i<airlines.length; i++) {
+      for (let i = 0; i < airlines.length; i++) {
         option = document.createElement('option');
         option.value = airlines[i].airline;
         option.text = airlines[i].airline;
@@ -124,22 +38,11 @@ let Charts = (() => {
       }
     }
 
-    function parseAndCreateChart(canvas, flights, title) {
-      const airline = [];
-      const delay = [];
-      const count = [];
-      for (let i = 0; i<flights.length; i++){
-        airline.push(flights[i].airline);
-        delay.push(flights[i].avgdelay);
-        count.push(flights[i].count);
-      }
-      createBarChart(canvas, airline, delay, count, title);
-    }
 
     function getPrettyTimeStamp(timeStamp) {
       const month = timeStamp.substring(5, 7);
       const day = timeStamp.substring(8, 10);
-      return day+'/'+month;
+      return `${day}/${month}`;
     }
     function createBarChart(canvas, x, y, z, title) {
       const myChart = new Chart(canvas, {
@@ -156,7 +59,7 @@ let Charts = (() => {
             data: z,
             backgroundColor: 'rgba(50,50,255,1)',
             borderWidth: 1,
-          }]
+          }],
         },
         options: {
           animation: {
@@ -167,7 +70,7 @@ let Charts = (() => {
 
               ctx.textAlign = 'center';
               Chart.helpers.each(this.data.datasets.forEach((dataset, i) => {
-                var meta = chartInstance.controller.getDatasetMeta(i);
+                const meta = chartInstance.controller.getDatasetMeta(i);
                 Chart.helpers.each(meta.data.forEach((bar, index) => {
                   ctx.fillStyle = '#000000';
                   ctx.fillText(dataset.data[index], bar._model.x, height - ((height - bar._model.y) / 1.5));
@@ -192,17 +95,6 @@ let Charts = (() => {
       });
     }
 
-    function parseAndCreateLineChart(canvas, data, title) {
-      const days = [];
-      const delay = [];
-      for (let i = 0; i<data.length; i++) {
-        // Take the substring to remove the year and min/hour/seconds as it
-        // is irrelevant.  We only want day and month.
-        days.push(getPrettyTimeStamp(data[i].flightdate));
-        delay.push(data[i].avgdelay);
-      }
-      createLineChart(canvas, days, delay, title);
-    }
 
     function createLineChart(canvas, x, y, label) {
       const data = {
@@ -252,8 +144,117 @@ let Charts = (() => {
         },
       });
     }
+    function parseAndCreateChart(canvas, flights, title) {
+      const airline = [];
+      const delay = [];
+      const count = [];
+      for (let i = 0; i < flights.length; i++) {
+        airline.push(flights[i].airline);
+        delay.push(flights[i].avgdelay);
+        count.push(flights[i].count);
+      }
+      createBarChart(canvas, airline, delay, count, title);
+    }
+
+    function parseAndCreateLineChart(canvas, data, title) {
+      const delayDays = [];
+      const delay = [];
+      for (let i = 0; i < data.length; i++) {
+        // Take the substring to remove the year and min/hour/seconds as it
+        // is irrelevant.  We only want day and month.
+        delayDays.push(getPrettyTimeStamp(data[i].flightdate));
+        delay.push(data[i].avgdelay);
+      }
+      createLineChart(canvas, delayDays, delay, title);
+    }
+    arrivalBtn.addEventListener('click', () => {
+      const airline = arrivalAirlineSelector
+                      .options[arrivalAirlineSelector.selectedIndex].value;
+      const numDays = arrivalNumDays.value;
+
+      $.ajax({
+        url: `http://localhost:3000/json/getArrDelayXDaysBackAirline/${airline}/${numDays}`,
+        type: 'GET',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: (data) => {
+          parseAndCreateLineChart(ctx4, data,
+              `Average arrival delay for airline ${airline} the last ${numDays} days.`);
+        },
+      });
+    });
+    departureBtn.addEventListener('click', () => {
+      const airline = departureAirlineSelector
+                      .options[departureAirlineSelector.selectedIndex].value;
+      const numDays = departureNumDays.value;
+      $.ajax({
+        url: `http://localhost:3000/json/getDepDelayXDaysBackAirline/${airline}/${numDays}`,
+        type: 'GET',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: (data) => {
+          parseAndCreateLineChart(ctx5, data,
+            `Average departure delay for airline ${airline} the last ${numDays} days.`);
+        },
+      });
+    });
+
+    // Fill into the airline input selections
+    $.ajax({
+      url: `http://localhost:3000/json/getArrAirlines/${days}`,
+      type: 'GET',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      success: (data) => {
+        fillArrivalAirlineSelectionInput(data);
+      },
+    });
+
+    $.ajax({
+      url: `http://localhost:3000/json/getDepAirlines/${days}`,
+      type: 'GET',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      success: (data) => {
+        fillDepartureAirlineSelectionInput(data);
+      },
+    });
+
+    $.ajax({
+      url: 'http://localhost:3000/json/avgDepDelay',
+      type: 'GET',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      success: (data) => {
+        parseAndCreateChart(ctx1, data, 'Average departure delay for airline');
+      },
+    });
+
+    $.ajax({
+      url: 'http://localhost:3000/json/avgArrDelay',
+      type: 'GET',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      success: (data) => {
+        parseAndCreateChart(ctx2, data, 'Average arrival delay for airline');
+      },
+    });
+
+    $.ajax({
+      url: `http://localhost:3000/json/getArrDelayXDaysBack/${days}`,
+      type: 'GET',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      success: (data) => {
+        parseAndCreateChart(ctx3, data, `Average arrival delay for airline last ${days} days`);
+      },
+    });
   }
   return {
     init,
   };
 })();
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  Charts.init();
+});
