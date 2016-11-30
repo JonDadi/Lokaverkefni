@@ -200,7 +200,7 @@ function setTimer() {
   const rule = new schedule.RecurrenceRule();
   rule.dayOfWeek = [new schedule.Range(0, 6)];
   rule.minute = new schedule.Range(0, 59, MINUTE_INTERVAL);
-  const j = schedule.scheduleJob(rule, () => {
+  schedule.scheduleJob(rule, () => {
     flights.flights('en', 'departures')
     .then((departureData) => {
       saveDepartedOrArrivedFlights(departureData.data.results, 'Departed');
