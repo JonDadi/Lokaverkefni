@@ -275,12 +275,13 @@ const Charts = (() => {
     });
 
     $.ajax({
-      url: `http://localhost:3000/json/getTotalFlightsAndTimelyArrivals/`,
+      url: 'http://localhost:3000/json/getTotalFlightsAndTimelyArrivals/',
       type: 'GET',
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       success: (data) => {
-        parseAndCreateChart(ctx6, data, `Total flights per airline and the number of flights that arrived on time or early`, false);
+        parseAndCreateChart(ctx6, data, `Total flights per airline and the
+                            number of flights that arrived on time or early`, false);
       },
     });
   }
