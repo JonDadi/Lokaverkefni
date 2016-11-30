@@ -3,6 +3,8 @@ const flights = require('./schedule');
 const db = require('./dbConnect');
 const schedule = require('node-schedule');
 
+// Number of minutes between API calls.
+const MINUTE_INTERVAL = 5
 // Keeping track of recently saved flights to avoid saving duplicates.
 let recentlySavedDepartingFlights = [];
 let recentlySavedArrivingFlights = [];
@@ -196,7 +198,7 @@ function saveDepartedOrArrivedFlights(flightsFromApi, type) {
 function setTimer() {
   const rule = new schedule.RecurrenceRule();
   rule.dayOfWeek = [new schedule.Range(0, 6)];
-  rule.minute = new schedule.Range(0, 59, 1);
+  rule.minute = new schedule.Range(0, 59, MINUTE_INTERVAL);
   const j = schedule.scheduleJob(rule, () => {
     flights.flights('en', 'departures')
     .then((departureData) => {
