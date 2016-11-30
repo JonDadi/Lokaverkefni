@@ -4,7 +4,8 @@ const db = require('./dbConnect');
 const schedule = require('node-schedule');
 
 // Number of minutes between API calls.
-const MINUTE_INTERVAL = 5
+const MINUTE_INTERVAL = 1
+
 // Keeping track of recently saved flights to avoid saving duplicates.
 let recentlySavedDepartingFlights = [];
 let recentlySavedArrivingFlights = [];
@@ -26,13 +27,13 @@ function trimRecentFlightsArray() {
   const departureLength = recentlySavedDepartingFlights.length;
   const arrivalLength = recentlySavedArrivingFlights.length;
 
-  if (departureLength > 50) {
+  if (departureLength > 80) {
     recentlySavedDepartingFlights = recentlySavedDepartingFlights
-                                    .slice((departureLength - 50), 51);
+                                    .slice((departureLength - 80), 81);
   }
-  if (arrivalLength > 50) {
+  if (arrivalLength > 80) {
     recentlySavedArrivingFlights = recentlySavedArrivingFlights
-                                  .slice((arrivalLength - 50), 51);
+                                  .slice((arrivalLength - 80), 81);
   }
 }
 
@@ -253,7 +254,7 @@ function getLastInsertedFlights(numFlights) {
 
 
 function initFlightSaver() {
-  if (!hasRecentFlights) getLastInsertedFlights(50);
+  if (!hasRecentFlights) getLastInsertedFlights(80);
 }
 
 module.exports = { initFlightSaver };
