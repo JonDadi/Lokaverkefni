@@ -118,7 +118,8 @@ function getAvgArrivalDelayPastXDays(numDays) {
                  GROUP BY airline", [numDays]);
 }
 function getAvgDepartureDelayPastXDays(numDays) {
-  return db.any("SELECT airline, ROUND(AVG(delay)) AS avgDelay FROM departures \
+  return db.any("SELECT airline, ROUND(AVG(delay)) AS avgDelay,     \
+                 COUNT(onTimeOrEarly) FROM departures \
                  WHERE onTimeOrEarly = false AND                             \
                  flightDate >= CURRENT_DATE - INTERVAL '$1 DAY'             \
                  GROUP BY airline", [numDays]);
@@ -161,6 +162,21 @@ function getRecentlySavedDeparting(NumFlights) {
                  WHERE id > (SELECT MAX(id) FROM departures)-$1', [NumFlights]);
 }
 
+// returns columns: airline - total - timely
+function getTotalFlightsAndTimelyDepartures() {
+  return db.any('with tot as ( SELECT airline, COUNT(onTimeOrEarly) as Total  \
+		                           FROM departures                                \
+		                           GROUP BY airline                               \
+		                          )                                               \
+                 SELECT tot.airline, total, timely                            \
+                 FROM tot JOIN (SELECT airline, COUNT(onTimeOrEarly) as Timely\
+		                            FROM departures                               \
+		                            WHERE onTimeOrEarly = true                    \
+		                            GROUP BY airline                              \
+		                            ) AS d                                        \
+                 ON tot.airline = d.airline', [true])
+}
+
 function test() {
   return db.any('SELECT flightDate from arrivals where    \
                 flightDate >= CURRENT_DATE - INTERVAL \'50 DAY\'', [true]);
@@ -183,4 +199,5 @@ module.exports = {
   getAllDeparturesAirlineNamesPastXDays,
   getRecentlySavedArriving,
   getRecentlySavedDeparting,
+  getTotalFlightsAndTimelyDepartures,
 };

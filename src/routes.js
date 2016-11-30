@@ -67,24 +67,27 @@ router.get('/statistics/', (req, res, next) => {
   res.render('stats', { title: 'Flight Statistics' });
 });
 
-router.get('/json/avgDepDelay', (req, res, next) => {
-  db.getAvgDepartureDelayAllAirlines()
-  .then((data) => {
-    res.json(data);
-  });
-});
-
 router.get('/about', (req, res, next) => {
   res.render('about', { title: 'About this page' });
 });
 
-router.get('/json/avgArrDelay', (req, res, next) => {
-  db.getAvgArrivalDelayAllAirlines()
+// hardcoded 7 days
+router.get('/json/avgDepDelay', (req, res, next) => {
+  db.getAvgDepartureDelayPastXDays(7)
   .then((data) => {
     res.json(data);
   });
 });
 
+// hardcoded 7 days
+router.get('/json/avgArrDelay', (req, res, next) => {
+  db.getAvgArrivalDelayPastXDays(7)
+  .then((data) => {
+    res.json(data);
+  });
+});
+
+// Use input from user to get data X days back
 router.get('/json/getArrDelayXDaysBack/:days', (req, res, next) => {
   db.getAvgArrivalDelayPastXDays(parseInt(req.params.days, 10))
   .then((data) => {
@@ -112,6 +115,14 @@ router.get('/json/getArrDelayXDaysBackAirline/:airline/:days',
 (req, res, next) => {
   db.getAvgArrivalDelayPastXDaysForAirline(parseInt(req.params.days, 10),
   req.params.airline)
+  .then((data) => {
+    res.json(data);
+  });
+});
+
+
+router.get('/json/getTotalFlightsAndTimelyDepartures/', (req, res, next) => {
+  db.getTotalFlightsAndTimelyDepartures()
   .then((data) => {
     res.json(data);
   });

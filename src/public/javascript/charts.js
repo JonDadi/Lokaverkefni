@@ -1,5 +1,5 @@
 
-let Charts = (() => {
+const Charts = (() => {
   function init() {
     // Placeholder variable, to be replaced with input number.
     const days = 10;
@@ -44,39 +44,44 @@ let Charts = (() => {
       const day = timeStamp.substring(8, 10);
       return `${day}/${month}`;
     }
-    function createBarChart(canvas, x, y, z, title) {
+    function createBarChart(canvas, x, y, z, title, labels) {
       const myChart = new Chart(canvas, {
         type: 'bar',
         data: {
           labels: x,
           datasets: [{
-            label: 'Delay in minutes',
+            label: labels[0],
             data: y,
             backgroundColor: 'rgba(255,50,50,1)',
             borderWidth: 1,
           }, {
-            label: 'Nr of delayed flights',
+            label: labels[1],
             data: z,
             backgroundColor: 'rgba(50,50,255,1)',
             borderWidth: 1,
           }],
         },
         options: {
+          hover: {
+            animationDuration: 0,
+          },
           animation: {
-            onComplete: () => {
-              const chartInstance = this.chart;
-              const ctx = chartInstance.ctx;
-              const height = chartInstance.controller.boxes[0].bottom;
-
+            duration: 0,
+            onComplete: function () {
+              // render the value of the chart above the bar
+              const ctx = this.chart.ctx;
+              ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal',
+                Chart.defaults.global.defaultFontFamily);
+              ctx.fillStyle = this.chart.config.options.defaultFontColor;
               ctx.textAlign = 'center';
-              Chart.helpers.each(this.data.datasets.forEach((dataset, i) => {
-                const meta = chartInstance.controller.getDatasetMeta(i);
-                Chart.helpers.each(meta.data.forEach((bar, index) => {
-                  ctx.fillStyle = '#000000';
-                  ctx.fillText(dataset.data[index], bar._model.x, height - ((height - bar._model.y) / 1.5));
-                }), this);
-              }), this);
-            },
+              ctx.textBaseline = 'bottom';
+              this.data.datasets.forEach(function (dataset) {
+                for (let i = 0; i < dataset.data.length; i++) {
+                  const model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
+                  ctx.fillText(dataset.data[i], model.x, model.y - 5);
+                }
+              });
+            }
           },
           title: {
             display: true,
@@ -144,16 +149,32 @@ let Charts = (() => {
         },
       });
     }
-    function parseAndCreateChart(canvas, flights, title) {
+    function parseAndCreateChart(canvas, flights, title, delayTrue) {
       const airline = [];
       const delay = [];
       const count = [];
-      for (let i = 0; i < flights.length; i++) {
-        airline.push(flights[i].airline);
-        delay.push(flights[i].avgdelay);
-        count.push(flights[i].count);
+      let labels = [];
+      console.log(delayTrue);
+      if (delayTrue) {
+
+        for (let i = 0; i < flights.length; i++) {
+          airline.push(flights[i].airline);
+          delay.push(flights[i].avgdelay);
+          count.push(flights[i].count);
+        }
+        labels = ['Delay in minutes', 'Nr of delayed flights'];
+        createBarChart(canvas, airline, delay, count, title, labels);
+      } else {
+          const total = [];
+          const timely = [];
+          for (let i = 0; i < flights.length; i++) {
+            airline.push(flights[i].airline);
+            total.push(flights[i].total);
+            timely.push(flights[i].timely);
+          }
+          labels = ['Total flights', 'Flights on time or early'];
+          createBarChart(canvas, airline, total, timely, title, labels);
       }
-      createBarChart(canvas, airline, delay, count, title);
     }
 
     function parseAndCreateLineChart(canvas, data, title) {
@@ -179,7 +200,7 @@ let Charts = (() => {
         dataType: 'json',
         success: (data) => {
           parseAndCreateLineChart(ctx4, data,
-              `Average arrival delay for airline ${airline} the last ${numDays} days.`);
+            `Average arrival delay for airline ${airline} the last ${numDays} days.`);
         },
       });
     });
@@ -226,7 +247,7 @@ let Charts = (() => {
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       success: (data) => {
-        parseAndCreateChart(ctx1, data, 'Average departure delay for airline');
+        parseAndCreateChart(ctx1, data, 'Average departure delay per airline for the past 7 days', true);
       },
     });
 
@@ -236,19 +257,20 @@ let Charts = (() => {
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       success: (data) => {
-        parseAndCreateChart(ctx2, data, 'Average arrival delay for airline');
+        parseAndCreateChart(ctx2, data, 'Average arrival delay per airline for the past 7 days', true);
       },
     });
 
     $.ajax({
-      url: `http://localhost:3000/json/getArrDelayXDaysBack/${days}`,
+      url: `http://localhost:3000/json/getTotalFlightsAndTimelyDepartures/`,
       type: 'GET',
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       success: (data) => {
-        parseAndCreateChart(ctx3, data, `Average arrival delay for airline last ${days} days`);
+        parseAndCreateChart(ctx3, data, `Total flights per airline and the number of flights on time or early`, false);
       },
-    });
+});
+
   }
   return {
     init,

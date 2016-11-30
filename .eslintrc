@@ -4,7 +4,7 @@
   "rules": {
     "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.test.js", "**/*.spec.js"]}],
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
-    "max-len": ["error", 80],
+    "max-len": ["error", 100],
     "no-unused-vars": ["error", { "args": "none" }],
     "new-cap": ["error", { "capIsNew": false }],
     "linebreak-style": ["error", "windows"]
