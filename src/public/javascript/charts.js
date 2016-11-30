@@ -71,8 +71,6 @@ const Charts = (() => {
             onComplete: function comp() {
               // render the value of the chart above the bar
               const ctx = this.chart.ctx;
-              ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal',
-              Chart.defaults.global.defaultFontFamily);
               ctx.fillStyle = this.chart.config.options.defaultFontColor;
               ctx.textAlign = 'center';
               ctx.textBaseline = 'bottom';
