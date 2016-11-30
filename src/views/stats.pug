@@ -20,6 +20,25 @@ block content
             li
               a(href= "/about").text-uppercase About
   div.container
+    h1 Flight Statistics
+    div.graphWrapper
+      canvas#myDepChart()
+    div.graphWrapper
+      canvas#myArrChart()
+    div.graphWrapper
+      canvas#myDepOnTimeChart()
+    div.graphWrapper
+      canvas#myArrOnTimeChart()
+    div.graphWrapper
+      select(id="airlSelectArr", name="Airline_selection")
+      input(id="arrNumDays" type="number", min="0", max="30", step="1", value="0")
+      button(id="arrivalsBtn" type="button") Get Data!
+      canvas#myArrDelPerDayAirlLine()
+    div.graphWrapper
+      select(id="airlSelectDep", name="Airline_selection")
+      input(id="depNumDays" type="number", min="0", max="30", step="1", value="0")
+      button(id="departureBtn" type="button") Get Data!
+      canvas#myDepDelPerDayAirlLine()
     div.graphsContainer
       h1 Flight Statistics
       section.graphGroup

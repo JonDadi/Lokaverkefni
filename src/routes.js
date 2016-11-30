@@ -128,6 +128,13 @@ router.get('/json/getTotalFlightsAndTimelyDepartures/', (req, res, next) => {
   });
 });
 
+router.get('/json/getTotalFlightsAndTimelyArrivals/', (req, res, next) => {
+  db.getTotalFlightsAndTimelyArrivals()
+  .then((data) => {
+    res.json(data);
+  });
+});
+
 // Get the airlines available
 router.get('/json/getArrAirlines/:days', (req, res, next) => {
   db.getAllArrivalsAirlineNamesPastXDays(parseInt(req.params.days, 10))

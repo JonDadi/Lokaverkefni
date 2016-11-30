@@ -6,9 +6,10 @@ const Charts = (() => {
 
     const ctx1 = document.getElementById('myDepChart');
     const ctx2 = document.getElementById('myArrChart');
-    const ctx3 = document.getElementById('myDepXDaysChart');
+    const ctx3 = document.getElementById('myDepOnTimeChart');
     const ctx4 = document.getElementById('myArrDelPerDayAirlLine');
     const ctx5 = document.getElementById('myDepDelPerDayAirlLine');
+    const ctx6 = document.getElementById('myArrOnTimeChart');
 
     const arrivalAirlineSelector = document.getElementById('airlSelectArr');
     const departureAirlineSelector = document.getElementById('airlSelectDep');
@@ -270,6 +271,16 @@ const Charts = (() => {
       success: (data) => {
         parseAndCreateChart(ctx3, data, `Total flights per airline and the number
                             of flights on time or early`, false);
+      },
+    });
+
+    $.ajax({
+      url: `http://localhost:3000/json/getTotalFlightsAndTimelyArrivals/`,
+      type: 'GET',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      success: (data) => {
+        parseAndCreateChart(ctx6, data, `Total flights per airline and the number of flights that arrived on time or early`, false);
       },
     });
   }
