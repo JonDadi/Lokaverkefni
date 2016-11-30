@@ -68,7 +68,7 @@ const Charts = (() => {
           },
           animation: {
             duration: 0,
-            onComplete: function () {
+            onComplete: function comp() {
               // render the value of the chart above the bar
               const ctx = this.chart.ctx;
               ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal',
@@ -155,7 +155,6 @@ const Charts = (() => {
       const delay = [];
       const count = [];
       let labels = [];
-      console.log(delayTrue);
       if (delayTrue) {
         for (let i = 0; i < flights.length; i++) {
           airline.push(flights[i].airline);

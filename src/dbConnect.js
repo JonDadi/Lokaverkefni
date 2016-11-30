@@ -19,10 +19,8 @@ function createTables() {
             onTimeOrEarly  boolean
   )`)
   .then(() => {
-    console.log('Arrival table created!');
   })
   .catch((error) => {
-    console.log('Failed to create Arrival table!', error);
   });
 
   // Departure table created.
@@ -39,10 +37,8 @@ function createTables() {
             onTimeOrEarly    boolean
   )`)
   .then(() => {
-    console.log('Departure table created!');
   })
   .catch((error) => {
-    console.log('Failed to create Departure table!', error);
   });
 }
 
@@ -58,10 +54,8 @@ function insertArrivalFlight(flightData) {
       flightData.status, flightData.delay,
       flightData.onTime])
   .then(() => {
-    console.log('Successfully inserted data into Arrivals table!');
   })
   .catch((error) => {
-    console.log('Could not insert into Arrivals !', error);
   });
 }
 
@@ -77,10 +71,8 @@ function insertDepartureFlight(flightData) {
       flightData.status, flightData.delay,
       flightData.onTime])
   .then(() => {
-    console.log('Successfully inserted data into Departures table!');
   })
   .catch((error) => {
-    console.log('Could not insert into Departures !', error);
   });
 }
 
