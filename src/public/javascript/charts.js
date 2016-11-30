@@ -165,15 +165,15 @@ const Charts = (() => {
         labels = ['Delay in minutes', 'Nr of delayed flights'];
         createBarChart(canvas, airline, delay, count, title, labels);
       } else {
-          const total = [];
-          const timely = [];
-          for (let i = 0; i < flights.length; i++) {
-            airline.push(flights[i].airline);
-            total.push(flights[i].total);
-            timely.push(flights[i].timely);
-          }
-          labels = ['Total flights', 'Flights on time or early'];
-          createBarChart(canvas, airline, total, timely, title, labels);
+        const total = [];
+        const timely = [];
+        for (let i = 0; i < flights.length; i++) {
+          airline.push(flights[i].airline);
+          total.push(flights[i].total);
+          timely.push(flights[i].timely);
+        }
+        labels = ['Total flights', 'Flights on time or early'];
+        createBarChart(canvas, airline, total, timely, title, labels);
       }
     }
 
@@ -247,7 +247,8 @@ const Charts = (() => {
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       success: (data) => {
-        parseAndCreateChart(ctx1, data, 'Average departure delay per airline for the past 7 days', true);
+        parseAndCreateChart(ctx1, data, `Average departure delay per
+                            airline for the past 7 days`, true);
       },
     });
 
@@ -267,7 +268,8 @@ const Charts = (() => {
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       success: (data) => {
-        parseAndCreateChart(ctx3, data, `Total flights per airline and the number of flights on time or early`, false);
+        parseAndCreateChart(ctx3, data, `Total flights per airline and the number
+                            of flights on time or early`, false);
       },
 });
 
