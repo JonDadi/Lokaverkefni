@@ -71,17 +71,17 @@ const Charts = (() => {
               // render the value of the chart above the bar
               const ctx = this.chart.ctx;
               ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal',
-                Chart.defaults.global.defaultFontFamily);
+              Chart.defaults.global.defaultFontFamily);
               ctx.fillStyle = this.chart.config.options.defaultFontColor;
               ctx.textAlign = 'center';
               ctx.textBaseline = 'bottom';
-              this.data.datasets.forEach(function (dataset) {
+              this.data.datasets.forEach((dataset) => {
                 for (let i = 0; i < dataset.data.length; i++) {
                   const model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
                   ctx.fillText(dataset.data[i], model.x, model.y - 5);
                 }
               });
-            }
+            },
           },
           title: {
             display: true,
@@ -156,7 +156,6 @@ const Charts = (() => {
       let labels = [];
       console.log(delayTrue);
       if (delayTrue) {
-
         for (let i = 0; i < flights.length; i++) {
           airline.push(flights[i].airline);
           delay.push(flights[i].avgdelay);
@@ -258,12 +257,13 @@ const Charts = (() => {
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       success: (data) => {
-        parseAndCreateChart(ctx2, data, 'Average arrival delay per airline for the past 7 days', true);
+        parseAndCreateChart(ctx2, data, `Average arrival delay per
+                            airline for the past 7 days`, true);
       },
     });
 
     $.ajax({
-      url: `http://localhost:3000/json/getTotalFlightsAndTimelyDepartures/`,
+      url: 'http://localhost:3000/json/getTotalFlightsAndTimelyDepartures/',
       type: 'GET',
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
@@ -271,8 +271,7 @@ const Charts = (() => {
         parseAndCreateChart(ctx3, data, `Total flights per airline and the number
                             of flights on time or early`, false);
       },
-});
-
+    });
   }
   return {
     init,
