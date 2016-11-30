@@ -1,7 +1,7 @@
 const pgp = require('pg-promise')();
 
 const env = process.env.DATABASE_URL;
-const db = pgp(env || 'postgres://postgres:dadi@localhost:5432/FlightData');
+const db = pgp(env || 'postgres://postgres:gusti@localhost:5432/FlightData');
 
 // Create the tables!
 function createTables() {

@@ -1,6 +1,28 @@
 extends layout
 
 block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+  header
+    nav.navbar.navbar-default.navbar-fixed-top
+      div.container
+        div
+          button(data-toggle="collapse" data-target="#navbar").navbar-toggle.collapsed
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        div.collapse.navbar-collapse#navbar
+          ul.nav.navbar-nav
+            li
+              a(href= "/").text-uppercase Flights
+            li
+              a(href= "/statistics").text-uppercase Statistics
+          ul.nav.navbar-nav.navbar-right
+            li
+              a(href= "/about").text-uppercase About
+  div.container
+    if notFound
+      h1= message
+      h2.text-center This page doesn't exists!
+    else
+      h2= error.status
+      pre #{error.stack}

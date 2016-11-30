@@ -32,6 +32,9 @@ app.use((err, req, res, next) => {
   response.locals.message = err.message;
   response.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  if (err.status === 404) {
+    response.render('error', {message: 'Something happened...', notFound: true});
+  }
   // render the error page
   response.status(err.status || 500);
   response.render('error');
