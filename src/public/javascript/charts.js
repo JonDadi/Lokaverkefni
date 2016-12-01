@@ -267,7 +267,7 @@ const Charts = (() => {
       dataType: 'json',
       success: (data) => {
         parseAndCreateChart(ctx3, data,
-        'Total flights per airline and the number of flights on time or early', false);
+        'Total flights per airline and the number of flights that departed on time or early', false);
       },
     });
 

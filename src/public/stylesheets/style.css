@@ -10,11 +10,11 @@ body {
   z-index: 1;
 }
 
-.container h1{
+.container h1 {
   text-align: center;
 }
 
-.graphWrapper{
+.graphWrapper {
   min-height: 300px;
   min-width: 100px;
   max-height: 500px;
