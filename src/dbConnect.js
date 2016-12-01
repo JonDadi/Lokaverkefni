@@ -1,7 +1,7 @@
 const pgp = require('pg-promise')();
 
 const env = process.env.DATABASE_URL;
-const db = pgp(env || 'postgres://postgres:gusti@localhost:5432/FlightData');
+const db = pgp(env || 'postgres://postgres:dadi@localhost:5432/FlightData');
 
 // Create the tables!
 function createTables() {
@@ -48,7 +48,7 @@ function insertArrivalFlight(flightData) {
               plannedArrival, realArrival,
               flightStatus, delay, onTimeOrEarly)
     VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-    [flightData.date, flightData.flightNumber,
+    [flightData.flightdate, flightData.flightNumber,
       flightData.from, flightData.airline,
       flightData.plannedArrival, flightData.realArrival,
       flightData.status, flightData.delay,
@@ -65,7 +65,7 @@ function insertDepartureFlight(flightData) {
                 plannedDeparture, realDeparture,
                 flightStatus, delay, onTimeOrEarly)
     VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-    [flightData.date, flightData.flightNumber,
+    [flightData.flightdate, flightData.flightNumber,
       flightData.to, flightData.airline,
       flightData.plannedArrival, flightData.realArrival,
       flightData.status, flightData.delay,
