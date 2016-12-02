@@ -183,6 +183,8 @@ const Charts = (() => {
         delayDays.push(getPrettyTimeStamp(data[i].flightdate));
         delay.push(data[i].avgdelay);
       }
+      delayDays.reverse();
+      delay.reverse();
       createLineChart(canvas, delayDays, delay, title);
     }
     arrivalBtn.addEventListener('click', () => {
