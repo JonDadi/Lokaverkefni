@@ -269,7 +269,7 @@ const Charts = (() => {
       dataType: 'json',
       success: (data) => {
         parseAndCreateChart(ctx3, data,
-        'Total flights per airline and the number of flights that departed on time or early', false);
+        'Total flights per airline and the number of flights that departed on time or earlier (in the past 7 days)', false);
       },
     });
 
@@ -280,7 +280,7 @@ const Charts = (() => {
       dataType: 'json',
       success: (data) => {
         parseAndCreateChart(ctx6, data,
-        'Total flights per airline and the number of flights that arrived on time or early', false);
+        'Total flights per airline and the number of flights that arrived on time or earlier (in the past 7 days)', false);
       },
     });
   }

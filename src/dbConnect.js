@@ -54,7 +54,6 @@ function insertArrivalFlight(flightData) {
       flightData.status, flightData.delay,
       flightData.onTime])
   .then(() => {
-    console.log("Inserted into arrivals");
   })
   .catch((error) => {
   });
@@ -72,7 +71,6 @@ function insertDepartureFlight(flightData) {
       flightData.status, flightData.delay,
       flightData.onTime])
   .then(() => {
-    console.log("Inserted into departures");
   })
   .catch((error) => {
   });
@@ -156,10 +154,11 @@ function getRecentlySavedDeparting(NumFlights) {
                  WHERE id > (SELECT MAX(id) FROM departures)-$1`, [NumFlights]);
 }
 
-// returns columns: airline - total - timely
+// returns columns: airline - total - timely and only data 7 days in the past
 function getTotalFlightsAndTimelyDepartures() {
   return db.any(`with tot as ( SELECT airline, COUNT(onTimeOrEarly) as Total
                  FROM departures
+                 WHERE flightDate >= CURRENT_DATE - INTERVAL '7 day'
                  GROUP BY airline )
                  SELECT tot.airline, total, timely
                  FROM tot JOIN (SELECT airline, COUNT(onTimeOrEarly) as Timely
@@ -172,6 +171,7 @@ function getTotalFlightsAndTimelyDepartures() {
 function getTotalFlightsAndTimelyArrivals() {
   return db.any(`with tot as ( SELECT airline, COUNT(onTimeOrEarly) as Total
                            FROM arrivals
+                           WHERE flightDate >= CURRENT_DATE - INTERVAL '7 day'
                            GROUP BY airline
                           )
                  SELECT tot.airline, total, timely
