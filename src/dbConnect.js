@@ -54,6 +54,7 @@ function insertArrivalFlight(flightData) {
       flightData.status, flightData.delay,
       flightData.onTime])
   .then(() => {
+    console.log("Inserted into arrivals");
   })
   .catch((error) => {
   });
@@ -71,6 +72,7 @@ function insertDepartureFlight(flightData) {
       flightData.status, flightData.delay,
       flightData.onTime])
   .then(() => {
+    console.log("Inserted into departures");
   })
   .catch((error) => {
   });

@@ -45,9 +45,9 @@ function constructDate(flightDate, time) {
   const currDate = new Date();
   const currentYear = currDate.getFullYear();
   const month = flightDate.substring(flightDate.length - 3, flightDate.length);
-  const day = flightDate.substring(0, 2);
+  let day = flightDate.substring(0, 2).replace('.', '');
+  if(day.length === 1) day = '0'+day;
   const dateString = `${currentYear}/${month}/${day} ${time}`;
-
   const returnDate = new Date(dateString);
   return returnDate;
 }
@@ -70,7 +70,9 @@ function constructSqlDate(flightDate) {
   let fdate = constructDate(flightDate, '00:00');
   const currDate = new Date();
   const currentYear = currDate.getFullYear();
-  fdate = `${currentYear}-${fdate.getMonth() + 1}-${fdate.getDate()}`;
+  let day = fdate.getDate();
+  if(day < 10){day = '0'+day;}
+  fdate = `${currentYear}-${fdate.getMonth() + 1}-${day}`;
   return fdate;
 }
 function trimSqlDate(flightDate) {
@@ -146,7 +148,7 @@ function saveFlights(flightsToSaveParam, departure) {
       recentlySavedArrivingFlights.push(flightsToSave[i]);
     }
   }
-  trimRecentFlightsArray();
+  //trimRecentFlightsArray();
 }
 function isFlightInArray(flight, flightArray) {
   for (let i = 0; i < flightArray.length; i++) {
@@ -171,6 +173,7 @@ function saveDepartedOrArrivedFlights(flightsFromApi, type) {
       if (apiFlights[i].realArrival.indexOf('Departed') > -1) {
         if (!isFlightInArray(apiFlights[i], recentlySavedDepartingFlights)) {
           departedFlightsToSave.push(apiFlights[i]);
+          //console.log(apiFlights[i]);
         }
       }
     }// end for
@@ -226,6 +229,7 @@ function formatDates() {
     const fnumber = recentlySavedDepartingFlights[i].flightnumber;
     recentlySavedDepartingFlights[i].flightNumber = fnumber;
   }
+  //console.log(recentlySavedArrivingFlights);
 }
 
 function getLastInsertedFlights(numFlights) {
