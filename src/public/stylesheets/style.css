@@ -31,3 +31,13 @@ body {
 .about {
   margin-bottom: 70px;
 }
+
+.arrDepButtons {
+  width: 120px;
+}
+
+@media screen and (max-width: 1090px) {
+  .arrButton {
+    margin-bottom: 15px;
+  }
+}
