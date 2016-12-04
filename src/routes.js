@@ -104,7 +104,7 @@ router.get('/json/getDepartureDelayXDaysBack/:days', (req, res, next) => {
 
 router.get('/json/getDepDelayXDaysBackAirline/:airline/:days',
 (req, res, next) => {
-  db.getAvgArrivalDelayPastXDaysForAirline(parseInt(req.params.days, 10),
+  db.getAvgDepartureDelayPastXDaysForAirline(parseInt(req.params.days, 10),
   req.params.airline)
   .then((data) => {
     res.json(data);
