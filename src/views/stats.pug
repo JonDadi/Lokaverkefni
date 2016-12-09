@@ -22,25 +22,25 @@ block content
   div.container
     h1 Flight Statistics
     div.graphWrapper
-      canvas#myDepChart()
+      canvas#myDepChart
     div.graphWrapper
-      canvas#myArrChart()
+      canvas#myArrChart
     div.graphWrapper
-      canvas#myDepOnTimeChart()
+      canvas#myDepOnTimeChart
     div.graphWrapper
-      canvas#myArrOnTimeChart()
+      canvas#myArrOnTimeChart
     div.graphWrapper
       select(id="airlSelectArr", name="Airline_selection")
       input(id="arrNumDays" type="number", min="0", max="30", step="1", value="0")
       button(id="arrivalsBtn" type="button") Get Data!
       h4 Choose an airline and select how many days of data you wish to plot (arrival delay)
-      canvas#myArrDelPerDayAirlLine()
+      canvas#myArrDelPerDayAirline
     div.graphWrapper
       select(id="airlSelectDep", name="Airline_selection")
       input(id="depNumDays" type="number", min="0", max="30", step="1", value="0")
       button(id="departureBtn" type="button") Get Data!
       h4 Choose an airline and select how many days of data you wish to plot (departure delay)
-      canvas#myDepDelPerDayAirlLine()
+      canvas#myDepDelPerDayAirline
   script(type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js')
   script(type='text/javascript' src='javascript/libs/Chart.js')
   script(type='text/javascript' src='javascript/charts.js')

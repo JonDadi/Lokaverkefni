@@ -46,7 +46,9 @@ function constructDate(flightDate, time) {
   const currentYear = currDate.getFullYear();
   const month = flightDate.substring(flightDate.length - 3, flightDate.length);
   let day = flightDate.substring(0, 2).replace('.', '');
-  if(day.length === 1) day = '0'+day;
+  if (day.length === 1) {
+    day = '0' + day;
+  }
   const dateString = `${currentYear}/${month}/${day} ${time}`;
   const returnDate = new Date(dateString);
   return returnDate;
@@ -71,7 +73,9 @@ function constructSqlDate(flightDate) {
   const currDate = new Date();
   const currentYear = currDate.getFullYear();
   let day = fdate.getDate();
-  if(day < 10){day = '0'+day;}
+  if (day < 10) {
+    day = '0' + day;
+  }
   fdate = `${currentYear}-${fdate.getMonth() + 1}-${day}`;
   return fdate;
 }
@@ -142,13 +146,15 @@ function saveFlights(flightsToSaveParam, departure) {
     flightsToSave[i].date = getFormatedDate(flightsToSave[i]);
     if (departure) {
       db.insertDepartureFlight(flightsToSave[i]);
+      flightsToSave[i].saved = true;
       recentlySavedDepartingFlights.push(flightsToSave[i]);
     } else {
       db.insertArrivalFlight(flightsToSave[i]);
+      flightsToSave[i].saved = true;
       recentlySavedArrivingFlights.push(flightsToSave[i]);
     }
   }
-  //trimRecentFlightsArray();
+  // trimRecentFlightsArray();
 }
 function isFlightInArray(flight, flightArray) {
   for (let i = 0; i < flightArray.length; i++) {
@@ -173,7 +179,7 @@ function saveDepartedOrArrivedFlights(flightsFromApi, type) {
       if (apiFlights[i].realArrival.indexOf('Departed') > -1) {
         if (!isFlightInArray(apiFlights[i], recentlySavedDepartingFlights)) {
           departedFlightsToSave.push(apiFlights[i]);
-          //console.log(apiFlights[i]);
+          // console.log(apiFlights[i]);
         }
       }
     }// end for
@@ -222,14 +228,16 @@ function formatDates() {
     recentlySavedArrivingFlights[i].flightdate = trimSqlDate(date);
     const fnumber = recentlySavedArrivingFlights[i].flightnumber;
     recentlySavedArrivingFlights[i].flightNumber = fnumber;
+    recentlySavedArrivingFlights[i].saved = true;
   }
   for (let i = 0; i < recentlySavedDepartingFlights.length; i++) {
     const date = recentlySavedDepartingFlights[i].flightdate;
     recentlySavedDepartingFlights[i].flightdate = trimSqlDate(date);
     const fnumber = recentlySavedDepartingFlights[i].flightnumber;
     recentlySavedDepartingFlights[i].flightNumber = fnumber;
+    recentlySavedDepartingFlights[i].saved = true;
   }
-  //console.log(recentlySavedArrivingFlights);
+  // console.log(recentlySavedArrivingFlights);
 }
 
 function getLastInsertedFlights(numFlights) {

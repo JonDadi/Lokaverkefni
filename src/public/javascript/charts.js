@@ -7,8 +7,6 @@ const Charts = (() => {
     const ctx1 = document.getElementById('myDepChart');
     const ctx2 = document.getElementById('myArrChart');
     const ctx3 = document.getElementById('myDepOnTimeChart');
-    const ctx4 = document.getElementById('myArrDelPerDayAirlLine');
-    const ctx5 = document.getElementById('myDepDelPerDayAirlLine');
     const ctx6 = document.getElementById('myArrOnTimeChart');
 
     const arrivalAirlineSelector = document.getElementById('airlSelectArr');
@@ -101,6 +99,27 @@ const Charts = (() => {
 
 
     function createLineChart(canvas, x, y, label) {
+      // Everytime a chart is created, a hidden iframe is added to the DOM.
+      // Those iframes contain the info on the previous charts that were
+      // rendered. We need to clear them so there won't be ghost instances
+      // of them "behind" the data we're looking at.
+      const iframeList = document.querySelectorAll('.chartjs-hidden-iframe');
+      if (iframeList != null) {
+        for (let i = 0; i < iframeList.length; i++) {
+          iframeList[i].parentNode.removeChild(iframeList[i]);
+        }
+      }
+
+      // In addition to the above, we need to completely remove the previous
+      // canvas and create another one in its stead.
+      const ctx = canvas.getContext('2d');
+      const canvasId = ctx.canvas.id;
+      const parent = ctx.canvas.parentNode;
+      const newCanvas = document.createElement('canvas');
+      newCanvas.setAttribute('id', canvasId);
+      parent.removeChild(canvas);
+      parent.appendChild(newCanvas);
+
       const data = {
         labels: x,
         datasets: [{
@@ -122,11 +141,11 @@ const Charts = (() => {
           pointRadius: 1,
           pointHitRadius: 10,
           data: y,
-          spanGaps: false,
+          spanGaps: true,
         },
         ],
       };
-      const myChart = Chart.Line(canvas, {
+      const myChart = Chart.Line(newCanvas, {
         data,
         options: {
           legend: {
@@ -183,8 +202,6 @@ const Charts = (() => {
         delayDays.push(getPrettyTimeStamp(data[i].flightdate));
         delay.push(data[i].avgdelay);
       }
-      delayDays.reverse();
-      delay.reverse();
       createLineChart(canvas, delayDays, delay, title);
     }
     arrivalBtn.addEventListener('click', () => {
@@ -198,6 +215,7 @@ const Charts = (() => {
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: (data) => {
+          const ctx4 = document.getElementById('myArrDelPerDayAirline');
           parseAndCreateLineChart(ctx4, data,
             `Average arrival delay for airline ${airline} the last ${numDays} days.`);
         },
@@ -213,6 +231,7 @@ const Charts = (() => {
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: (data) => {
+          const ctx5 = document.getElementById('myDepDelPerDayAirline');
           parseAndCreateLineChart(ctx5, data,
             `Average departure delay for airline ${airline} the last ${numDays} days.`);
         },
@@ -269,7 +288,8 @@ const Charts = (() => {
       dataType: 'json',
       success: (data) => {
         parseAndCreateChart(ctx3, data,
-        'Total flights per airline and the number of flights that departed on time or earlier (in the past 7 days)', false);
+        `Total flights per airline and the number of flights that departed on time
+         or earlier (in the past 7 days)`, false);
       },
     });
 
@@ -280,7 +300,8 @@ const Charts = (() => {
       dataType: 'json',
       success: (data) => {
         parseAndCreateChart(ctx6, data,
-        'Total flights per airline and the number of flights that arrived on time or earlier (in the past 7 days)', false);
+        `Total flights per airline and the number of flights that arrived on time
+        or earlier (in the past 7 days)`, false);
       },
     });
   }

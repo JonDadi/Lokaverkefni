@@ -123,14 +123,16 @@ function getAvgDepartureDelayPastXDaysForAirline(numDays, airline) {
                  WHERE onTimeOrEarly = false AND
                  flightDate >= CURRENT_DATE - INTERVAL '$1 DAY' AND
                  airline = $2
-                 GROUP BY flightDate`, [numDays, airline]);
+                 GROUP BY flightDate
+                 ORDER BY flightDate`, [numDays, airline]);
 }
 function getAvgArrivalDelayPastXDaysForAirline(numDays, airline) {
   return db.any(`SELECT flightDate, ROUND(AVG(delay)) AS avgDelay FROM arrivals
                  WHERE onTimeOrEarly = false AND
                  flightDate >= CURRENT_DATE - INTERVAL '$1 DAY' AND
                  airline = $2
-                 GROUP BY  flightDate`, [numDays, airline]);
+                 GROUP BY flightDate
+                 ORDER BY flightDate`, [numDays, airline]);
 }
 
 function getAllArrivalsAirlineNamesPastXDays(days) {
