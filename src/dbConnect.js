@@ -105,15 +105,13 @@ function getAvgArrivalDelayAllAirlines() {
 function getAvgArrivalDelayPastXDays(numDays) {
   return db.any(`SELECT airline, ROUND(AVG(delay)) AS avgDelay,
                  COUNT(onTimeOrEarly) FROM arrivals
-                 WHERE onTimeOrEarly = false AND
-                 flightDate >= CURRENT_DATE - INTERVAL '$1 DAY'
+                 WHERE flightDate >= CURRENT_DATE - INTERVAL '$1 DAY'
                  GROUP BY airline`, [numDays]);
 }
 function getAvgDepartureDelayPastXDays(numDays) {
   return db.any(`SELECT airline, ROUND(AVG(delay)) AS avgDelay,
                  COUNT(onTimeOrEarly) FROM departures
-                 WHERE onTimeOrEarly = false AND
-                 flightDate >= CURRENT_DATE - INTERVAL '$1 DAY'
+                 WHERE flightDate >= CURRENT_DATE - INTERVAL '$1 DAY'
                  GROUP BY airline`, [numDays]);
 }
 
@@ -133,6 +131,44 @@ function getAvgArrivalDelayPastXDaysForAirline(numDays, airline) {
                  airline = $2
                  GROUP BY flightDate
                  ORDER BY flightDate`, [numDays, airline]);
+}
+
+function getAvgArrivalDelayPastXDaysForTwoAirlines(numDays, airline1, airline2) {
+  return db.any(`with airline1 as (
+		              SELECT airline as airline1, flightDate, ROUND(AVG(delay)) AS avgDelay1
+                  FROM arrivals
+                  WHERE flightDate >= CURRENT_DATE - INTERVAL '$1 DAY' AND airline = $2
+                  GROUP BY airline, flightDate
+                )
+                SELECT airline1, airline2, airline1.flightDate, avgDelay1, avgDelay2
+                FROM airline1
+                JOIN (
+	                 SELECT airline as airline2, flightDate, ROUND(AVG(delay)) AS avgDelay2
+                   FROM arrivals
+                   WHERE flightDate >= CURRENT_DATE - INTERVAL '10 day' AND airline = $3
+                   GROUP BY airline, flightDate
+                 ) AS airline2
+                 ON airline1.flightDate = airline2.flightDate
+                 ORDER BY flightDate`, [numDays, airline1, airline2]);
+}
+
+function getAvgDepartureDelayPastXDaysForTwoAirlines(numDays, airline1, airline2) {
+  return db.any(`with airline1 as (
+		              SELECT airline as airline1, flightDate, ROUND(AVG(delay)) AS avgDelay1
+                  FROM departures
+                  WHERE flightDate >= CURRENT_DATE - INTERVAL '$1 DAY' AND airline = $2
+                  GROUP BY airline, flightDate
+                )
+                SELECT airline1, airline2, airline1.flightDate, avgDelay1, avgDelay2
+                FROM airline1
+                JOIN (
+	                 SELECT airline as airline2, flightDate, ROUND(AVG(delay)) AS avgDelay2
+                   FROM departures
+                   WHERE flightDate >= CURRENT_DATE - INTERVAL '10 day' AND airline = $3
+                   GROUP BY airline, flightDate
+                 ) AS airline2
+                 ON airline1.flightDate = airline2.flightDate
+                 ORDER BY flightDate`, [numDays, airline1, airline2]);
 }
 
 function getAllArrivalsAirlineNamesPastXDays(days) {
@@ -196,7 +232,9 @@ module.exports = {
   getAvgArrivalDelayPastXDays,
   getAvgDepartureDelayPastXDays,
   getAvgArrivalDelayPastXDaysForAirline,
+  getAvgArrivalDelayPastXDaysForTwoAirlines,
   getAvgDepartureDelayPastXDaysForAirline,
+  getAvgDepartureDelayPastXDaysForTwoAirlines,
   getAllArrivalsAirlineNamesPastXDays,
   getAllDeparturesAirlineNamesPastXDays,
   getRecentlySavedArriving,

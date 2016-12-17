@@ -30,13 +30,15 @@ block content
     div.graphWrapper
       canvas#myArrOnTimeChart
     div.graphWrapper
-      select(id="airlSelectArr", name="Airline_selection")
+      select(id="airlSelectArr1", name="Airline_selection1")
+      select(id="airlSelectArr2", name="Airline_selection2")
       input(id="arrNumDays" type="number", min="0", max="30", step="1", value="0")
       button(id="arrivalsBtn" type="button") Get Data!
       h4 Choose an airline and select how many days of data you wish to plot (arrival delay)
       canvas#myArrDelPerDayAirline
     div.graphWrapper
-      select(id="airlSelectDep", name="Airline_selection")
+      select(id="airlSelectDep1", name="Airline_selection3")
+      select(id="airlSelectDep2", name="Airline_selection4")
       input(id="depNumDays" type="number", min="0", max="30", step="1", value="0")
       button(id="departureBtn" type="button") Get Data!
       h4 Choose an airline and select how many days of data you wish to plot (departure delay)

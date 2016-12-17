@@ -27,11 +27,8 @@ router.get('/', (req, res, next) => {
 });
 
 // get type of flight, either 'arrivals' or 'departures'
-// if param is 'statistics' we send the request forward
 router.get('/f/:type', (req, res, next) => {
   const type = req.params.type;
-
-  if (type === 'statistics') next();
 
   schedule.flights('en', type)
     .then((result) => {
@@ -111,10 +108,28 @@ router.get('/json/getDepDelayXDaysBackAirline/:airline/:days',
   });
 });
 
+router.get('/json/getDepDelayXDaysBackTwoAirlines/:airline1/:airline2/:days',
+(req, res, next) => {
+  db.getAvgDepartureDelayPastXDaysForTwoAirlines(parseInt(req.params.days, 10),
+  req.params.airline1, req.params.airline2)
+  .then((data) => {
+    res.json(data);
+  });
+});
+
 router.get('/json/getArrDelayXDaysBackAirline/:airline/:days',
 (req, res, next) => {
   db.getAvgArrivalDelayPastXDaysForAirline(parseInt(req.params.days, 10),
   req.params.airline)
+  .then((data) => {
+    res.json(data);
+  });
+});
+
+router.get('/json/getArrDelayXDaysBackTwoAirlines/:airline1/:airline2/:days',
+(req, res, next) => {
+  db.getAvgArrivalDelayPastXDaysForTwoAirlines(parseInt(req.params.days, 10),
+  req.params.airline1, req.params.airline2)
   .then((data) => {
     res.json(data);
   });
