@@ -145,7 +145,7 @@ function getAvgArrivalDelayPastXDaysForTwoAirlines(numDays, airline1, airline2) 
                 JOIN (
 	                 SELECT airline as airline2, flightDate, ROUND(AVG(delay)) AS avgDelay2
                    FROM arrivals
-                   WHERE flightDate >= CURRENT_DATE - INTERVAL '10 day' AND airline = $3
+                   WHERE flightDate >= CURRENT_DATE - INTERVAL '$1 DAY' AND airline = $3
                    GROUP BY airline, flightDate
                  ) AS airline2
                  ON airline1.flightDate = airline2.flightDate
@@ -164,7 +164,7 @@ function getAvgDepartureDelayPastXDaysForTwoAirlines(numDays, airline1, airline2
                 JOIN (
 	                 SELECT airline as airline2, flightDate, ROUND(AVG(delay)) AS avgDelay2
                    FROM departures
-                   WHERE flightDate >= CURRENT_DATE - INTERVAL '10 day' AND airline = $3
+                   WHERE flightDate >= CURRENT_DATE - INTERVAL '$1 DAY' AND airline = $3
                    GROUP BY airline, flightDate
                  ) AS airline2
                  ON airline1.flightDate = airline2.flightDate
