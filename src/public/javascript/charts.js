@@ -305,7 +305,7 @@ const Charts = (() => {
           success: (data) => {
             const ctx4 = document.getElementById('myArrDelPerDayAirline');
             parseAndCreateLineChart(ctx4, data,
-              `Average arrival delay for airline ${airline1} the last ${numDays} days. (neg. num. means departures leaving ahead of scheduled time)`, false);
+              `Average arrival delay for airline ${airline1} the last ${numDays} days. (neg. num. means flights arriving ahead of scheduled time)`, false);
           },
         });
       } else {
@@ -317,7 +317,7 @@ const Charts = (() => {
           success: (data) => {
             const ctx4 = document.getElementById('myArrDelPerDayAirline');
             parseAndCreateLineChart(ctx4, data,
-              `Comparing arrival delay between ${airline1} and ${airline2} the last ${numDays} days. (neg. num. means departures leaving ahead of scheduled time)`, true);
+              `Comparing arrival delay between ${airline1} and ${airline2} the last ${numDays} days. (neg. num. means flights arriving ahead of scheduled time)`, true);
           },
         });
       }
@@ -339,7 +339,7 @@ const Charts = (() => {
           success: (data) => {
             const ctx5 = document.getElementById('myDepDelPerDayAirline');
             parseAndCreateLineChart(ctx5, data,
-              `Avg. departure delay for airline ${airline1} the last ${numDays} days. (neg. num. means departures leaving ahead of scheduled time)`, false);
+              `Avg. departure delay for airline ${airline1} the last ${numDays} days. (neg. num. means flights leaving ahead of scheduled time)`, false);
           },
         });
       } else {
@@ -351,7 +351,7 @@ const Charts = (() => {
           success: (data) => {
             const ctx5 = document.getElementById('myDepDelPerDayAirline');
             parseAndCreateLineChart(ctx5, data,
-              `Comparing departure delay between ${airline1} and ${airline2} the last ${numDays} days. (neg. num. means departures leaving ahead of scheduled time)`, true);
+              `Comparing departure delay between ${airline1} and ${airline2} the last ${numDays} days. (neg. num. means flights leaving ahead of scheduled time)`, true);
           },
         });
       }
