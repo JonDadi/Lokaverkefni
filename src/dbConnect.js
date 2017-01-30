@@ -201,7 +201,7 @@ function getTotalFlightsAndTimelyDepartures() {
                  SELECT tot.airline, total, timely
                  FROM tot JOIN (SELECT airline, COUNT(onTimeOrEarly) as Timely
                  FROM departures
-                 WHERE onTimeOrEarly = true
+                 WHERE onTimeOrEarly = true AND flightDate >= CURRENT_DATE - INTERVAL '7 day'
                  GROUP BY airline) AS d
                  ON tot.airline = d.airline`, [true]);
 }
@@ -215,7 +215,7 @@ function getTotalFlightsAndTimelyArrivals() {
                  SELECT tot.airline, total, timely
                  FROM tot JOIN (SELECT airline, COUNT(onTimeOrEarly) as Timely
                             FROM arrivals
-                            WHERE onTimeOrEarly = true
+                            WHERE onTimeOrEarly = true AND flightDate >= CURRENT_DATE - INTERVAL '7 day'
                             GROUP BY airline
                             ) AS d
                  ON tot.airline = d.airline`, [true]);
